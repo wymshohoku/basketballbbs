@@ -1,0 +1,264 @@
+html {
+  /* px 表示 “像素（pixels）”: 基础字号为 10 像素 */
+  font-size: 10px;
+  /* Google fonts 输出的 CSS */
+  font-family: 'Open Sans', sans-serif;
+  background-color: #00539F;
+}
+
+body {
+  width: 800px;
+  margin: 0 auto;
+  background-color: #FF9500;
+  padding: 0 20px 20px 20px;
+  border: 5px solid black;
+}
+
+h1 {
+  font-size: 60px;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+  color: #00539F;
+  text-shadow: 3px 3px 1px black;
+}
+
+img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* 页眉布局 */
+
+header {
+  margin-bottom: 10px;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+main, header, nav, article, aside, footer, section {
+  /* background-color: rgba(0, 200, 83, 0.5); */
+  padding: 1%;
+}
+
+.siteWorld {
+  flex: 5;
+  text-transform: uppercase;
+  color: black;
+}
+
+header img {
+  display: block;
+  height: 60px;
+  padding-top: 20.15px;
+}
+
+nav {
+  height: 50px;
+  flex: 100%;
+  display: flex;
+}
+
+nav ul {
+  padding: 0;
+  list-style-type: none;
+  flex: 1;
+  display: flex;
+}
+
+nav li {
+  display: inline;
+  text-align: center;
+  flex: 1;
+}
+
+nav a, nav span {
+  display: inline-block;
+  font-size: 2rem;
+  height: 3rem;
+  line-height: 1.7;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: black;
+}
+
+/* 主布局 */
+
+main {
+  display: flex;
+  flex-direction: column;
+}
+
+.comment {
+  padding: 24px;
+}
+
+.art_text {
+  font-weight: 400;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.art_title {
+  font-size: 30px;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+.comment_count_info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-left: 12px;
+  border-left: 4px solid #252423;
+  font-size: 18px;
+  font-weight: 500;
+  height: 20px;
+  line-height: 20px;
+}
+
+.comment_title {
+  display: flex;
+  align-items: center;
+}
+
+.comment_title .comment_count {
+  margin-left: 6px;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.user_comment {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.user_info {
+  display: flex;
+  align-items: flex-start;
+}
+
+.user_info:last-child .user {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border: none;
+}
+
+.user {
+  flex-grow: 1;
+  margin-left: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.comment_info {
+  margin-top: 2px;
+  font-size: 12px;
+  color: #0e88fa;
+}
+
+.comment_text {
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.img_user {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+footer {
+  margin-top: 10px;
+}
+
+#bbsMsg #outer div ul .nav a {
+  background-color: blue;
+  padding: 5px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+#bbsMsg div div li a {
+  color: yellow;
+}
+
+#bbsForm form {
+  /* 居中表单 */
+  margin: 0 auto;
+  width: 400px;
+  /* 显示表单的轮廓 */
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+#bbsForm {
+  margin: 1em;
+}
+
+#bbsForm form div+div {
+  margin-top: 1em;
+}
+
+#bbsForm label {
+  /* 确保所有label大小相同并正确对齐 */
+  display: inline-block;
+  width: 90px;
+  text-align: right;
+}
+
+#bbsForm input, textarea {
+  /* 确保所有文本输入框字体相同
+     textarea默认是等宽字体 */
+  font: 1em sans-serif;
+  /* 使所有文本输入框大小相同 */
+  width: 300px;
+  box-sizing: border-box;
+  /* 调整文本输入框的边框样式 */
+  border: 1px solid #999;
+}
+
+#bbsForm input:focus, textarea:focus {
+  /* 给激活的元素一点高亮效果 */
+  border-color: #000;
+}
+
+#bbsForm input:invalid {
+  border: 2px dashed red;
+}
+
+#bbsForm input:valid {
+  border: 2px solid black;
+}
+
+#bbsForm textarea {
+  /* 使多行文本输入框和它们的label正确对齐 */
+  vertical-align: top;
+  /* 给文本留下足够的空间 */
+  height: 5em;
+}
+
+#bbsForm .button {
+  /* 把按钮放到和文本输入框一样的位置 */
+  padding-left: 90px;
+  /* 和label的大小一样 */
+}
+
+#bbsForm button {
+  /* 这个外边距的大小与label和文本输入框之间的间距差不多 */
+  margin-left: .5em;
+}
