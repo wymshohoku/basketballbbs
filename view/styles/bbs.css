@@ -181,6 +181,46 @@ main {
   overflow: hidden;
 }
 
+.first {
+  color: #666;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #e6e6e6;
+  padding: 5px 9px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#number {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.num {
+  color: #666;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #e6e6e6;
+  padding: 5px 9px;
+  font-size: 12px;
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.current {
+  color: #3e89fa;
+  font-size: 12px;
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 30px;
+  padding: 5px 9px;
+}
+
+#inp {
+  height: 32px;
+  width: 32px;
+}
+
 footer {
   margin-top: 10px;
 }
@@ -252,13 +292,13 @@ footer {
   height: 5em;
 }
 
-#bbsForm .button {
+#bbsForm #submit {
   /* 把按钮放到和文本输入框一样的位置 */
   padding-left: 90px;
   /* 和label的大小一样 */
 }
 
-#bbsForm button {
+#bbsForm #submit {
   /* 这个外边距的大小与label和文本输入框之间的间距差不多 */
   margin-left: .5em;
 }

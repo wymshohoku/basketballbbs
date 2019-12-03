@@ -10,6 +10,8 @@
 </head>
 
 <body>
+    <script src="../scripts/bbs.js">
+    </script>
     <header>
         <!-- 本站所有网页的统一主标题 -->
         <img src="../images/beach-ball.png">
@@ -29,7 +31,7 @@
     <main>
         <section>
             <div>
-                <h1 class="art_title">一句“打篮球能当饭吃吗”伤害了多少孩子的心！</h1>
+                <h1 class="art_title" id="art-1">一句“打篮球能当饭吃吗”伤害了多少孩子的心！</h1>
                 <article class="art_text">
                     <p>一句看似平常的质问，不知伤害了多少人的心。没错，如果从总体上看，打好篮球的人不多，依靠篮球最后养活自己的人也不多。除此之外，打篮球还带给我们伤病、耽误我们文化课的学习、阻碍我们挣钱养家等等。所以呢？某些人就可以有资格让我们放弃篮球吗？
                     </p>
@@ -44,36 +46,47 @@
                 </div>
             </h3>
             <div class="user_comment">
-                <div class="user_info" id="comment-3440152">
-                    <img class="img_user"
+                <div class="user_info" id="comment-1">
+                    <img class="img_user" id="img-user"
                         src="//upload.jianshu.io/users/upload_avatars/2571348/ca2d531d-05db-4172-817d-582436cf6ea1.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/80/h/80/format/webp"
                         alt="">
                     <div class="user">
-                        <div class="name">
+                        <div class="name" id="username">
                             篮筐里的球
                         </div>
                         <div class="comment_info">
                             <span>2楼 </span>
                             <time datetime="2016-08-03T15:49:03.000Z">2016.08.03
-                                23:49</time></div>
-                        <div class="comment_text">波士顿的小托马斯也很励志</div>
+                                23:49</time>
+                        </div>
+                        <div class="comment_text" id="msg">波士顿的小托马斯也很励志</div>
                     </div>
                 </div>
+            </div>
+            <div id="comment-pages">
+                <div class="first" id="home">首页</div>
+                <div class="first" id="before">上一页</div>
+                <div id="number">
+
+                </div>
+                <div class="first" id="next">下一页</div>
+                <div class="first" id="last">尾页</div>
+                <div class="current"></div>
             </div>
         </section>
         <section id="bbsForm">
             <!-- 此处包含一个 article（一篇文章），内容略…… -->
-            <form>
+            <form id="commentForm" action="../../controller/index/bbs_submit.php" method="POST">
                 <div>
                     <label for="name">昵称:</label>
-                    <input type="text" id="name" required>
+                    <input type="text" id="username" name="username" required>
                 </div>
                 <div>
                     <label for="msg">留言内容:</label>
-                    <textarea id="msg"></textarea>
+                    <textarea id="msg" name="msg" required></textarea>
                 </div>
                 <div>
-                    <button type="button" onclick="sendData({test:'ok'})">点击我！</button>
+                    <input id="submit" type="submit">
                 </div>
             </form>
         </section>
@@ -84,7 +97,7 @@
         <p>© 2050 某某保留所有权利</p>
     </footer>
 
-    <script src="../scripts/bbs.js"></script>
+    <script src="../scripts/bbs_submit.js"></script>
 </body>
 
 </html>
