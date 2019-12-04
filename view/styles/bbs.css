@@ -292,13 +292,13 @@ footer {
   height: 5em;
 }
 
-#bbsForm #submit {
+#bbsForm .button {
   /* 把按钮放到和文本输入框一样的位置 */
   padding-left: 90px;
   /* 和label的大小一样 */
 }
 
-#bbsForm #submit {
+#bbsForm button {
   /* 这个外边距的大小与label和文本输入框之间的间距差不多 */
   margin-left: .5em;
 }

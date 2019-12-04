@@ -1,16 +1,11 @@
 
-// 首先创建一个用来发送数据的iframe.
-/* var iframe = document.createElement("iframe");
-iframe.name = "myTarget";
-
-// 然后，将iframe附加到主文档
 window.addEventListener("load", function () {
-  iframe.style.display = "none";
-  document.body.appendChild(iframe);
-}); */
+  loadComment("../../controller/index/bbs.php", callbackComment);
+});
+
 function loadComment(url, callback) {
   let xhr = new XMLHttpRequest();
-  xhr.open('POST', url);
+  xhr.open("POST", url);
   xhr.responseType = "json";
 
   xhr.onload = function () {
@@ -24,7 +19,6 @@ function loadComment(url, callback) {
 //
 
 var comment = document.querySelector(".comment");
-var comment_count = document.getElementsByClassName("comment_count");
 //comment.style.display="none";
 //comment_count.style.text = "3";
 
@@ -43,23 +37,25 @@ function addComment(comment_count, jsonComments) {
       user_comment.appendChild(commentNew);
     }
     // 设置头像
-    commentNew.querySelector("#img-user").src = 
+    commentNew.querySelector("#img-user").src =
       jsonComments[comment_index - 1].userimg;
-      
-    commentNew.querySelector("#username").innerHTML =  
+
+    commentNew.querySelector("#username").innerHTML =
       jsonComments[comment_index - 1].username;
-      
-    var t = commentNew.querySelector("time");
-    t.datatime = 
-      jsonComments[comment_index - 1].time;
-    
-    commentNew.querySelector("#msg").innerHTML = 
+
+    var comment_floor = commentNew.querySelector("span");
+    comment_floor.innerHTML = comment_index + 1 + " 楼";
+
+    var comment_time = commentNew.querySelector("time");
+    comment_time.innerHTML = jsonComments[comment_index - 1].time;
+
+    commentNew.querySelector("#msg").innerHTML =
       jsonComments[comment_index - 1].msg;
   }
 }
 
 function callbackComment(jsonComment) {
+  var comment_count = document.querySelector(".comment_count");
+  comment_count.innerHTML = jsonComment.comment_count;
   addComment(jsonComment.comment_count, jsonComment.comments);
 }
-
-loadComment('../../controller/index/bbs.php', callbackComment);

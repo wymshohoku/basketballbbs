@@ -56,8 +56,7 @@
                         </div>
                         <div class="comment_info">
                             <span>2楼 </span>
-                            <time datetime="2016-08-03T15:49:03.000Z">2016.08.03
-                                23:49</time>
+                            <time>2016.08.03 23:49</time>
                         </div>
                         <div class="comment_text" id="msg">波士顿的小托马斯也很励志</div>
                     </div>
@@ -76,7 +75,7 @@
         </section>
         <section id="bbsForm">
             <!-- 此处包含一个 article（一篇文章），内容略…… -->
-            <form id="commentForm" action="../../controller/index/bbs_submit.php" method="POST">
+            <form id="commentForm">
                 <div>
                     <label for="name">昵称:</label>
                     <input type="text" id="username" name="username" required>
@@ -87,6 +86,7 @@
                 </div>
                 <div>
                     <input id="submit" type="submit">
+                    <!-- <button id="submit" onclick="sendData()">提交</button> -->
                 </div>
             </form>
         </section>
