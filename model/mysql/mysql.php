@@ -1,31 +1,59 @@
 <?php
 
-namespace model\mysql{
-    $servername = "localhost";
-    $dbname = "myphpweb";
-    $username = "myphpwebsql";
-    $password = "123456";
+namespace model\mysql {
+
+//require_once '../../model/common/util.php';
 
     class Pdo
     {
-        private $conn;
+        private $servername;
+        private $dbname;
+        private $username;
+        private $password;
+        private $charset;
 
-        public function __constructor()
+        private $conn;
+        private $error;
+
+        public function __construct()
         {
+            $this->servername = "localhost";
+            $this->dbname = "myphpweb";
+            $this->username = "myphpwebsql";
+            $this->password = "123456";
+            $this->charset = 'utf8';
+
             try {
-                $this->conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-                echo "连接成功";
+                $this->conn = new \PDO("mysql:host=$this->servername;dbname=$this->dbname;charset=$this->charset",
+                    $this->username, $this->password);
+                // 设置 PDO 错误模式，用于抛出异常
+                $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             } catch (PDOException $e) {
-                echo $e->getMessage();
+                $this->error = $e->getMessage();
             }
         }
-        public function __distructor()
+        public function __destruct()
         {
             $this->closeConnect();
         }
         public function closeConnect()
         {
-            $this->conn->close();
+            $this->conn = null;
+        }
+
+        public function getErrorMsg()
+        {
+            return $this->error;
+        }
+        public function querySQL($sql)
+        {
+            try {
+                $result = $this->conn->query($sql);
+            } catch (PDOException $e) {
+                $this->error = "Error: " . $e->getMessage();
+                return false;
+            }
+            return $result;
         }
     }
 }
