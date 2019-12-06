@@ -15,26 +15,30 @@ Date.prototype.Format = function (fmt) {
 	return fmt;
 }
 
-function appendComment(comment_index, userimg, username, time, msg) {
+function appendComment(comment_count, userimg, username, time, msg) {
 	var user_comment = document.querySelector(".user_comment");
 	var comment_1 = document.querySelector("#comment-1");
-	var commentNew = comment_1.cloneNode(true);
-	commentNew.setAttribute("id", "comment-" + comment_index);
+	var commentNew = comment_1;
+	if (comment_count > 1) {
+		commentNew = comment_1.cloneNode(true);
+	}
+	commentNew.setAttribute("id", "comment-" + comment_count);
 	// 设置头像
 	commentNew.querySelector("#img-user").src = userimg;
 
 	commentNew.querySelector("#username").innerHTML = username;
 
 	var comment_floor = commentNew.querySelector("span");
-	comment_floor.innerHTML = comment_index + 1 + " 楼";
+	comment_floor.innerHTML = comment_count + 1 + " 楼";
 
 	var comment_time = commentNew.querySelector("time");
 	comment_time.innerHTML = new Date(time).Format('yy-MM-dd hh:mm:ss'); //"2018-11-15 17:40:00"
-	;
 
 	commentNew.querySelector("#msg").innerHTML = msg;
 
-	user_comment.appendChild(commentNew);
+	if (comment_count > 1) {
+		user_comment.appendChild(commentNew);
+	}
 }
 
 // 提交表单数据，并验证数据的有效性，过滤字符串
@@ -45,7 +49,6 @@ form.onsubmit = function (e) {
 	var name = form.querySelector("#username").value;
 	var msg = form.querySelector("#msg").value;
 
-	e.preventDefault();
 	if (name === "") {
 		alert("请输入昵称！");
 	} else if (msg === "") {
@@ -64,10 +67,24 @@ form.onsubmit = function (e) {
 			//callbackComment(xhr.response);
 			jsonComment = xhr.response;
 		if (jsonComment != null) {
-			appendComment(jsonComment.comment_count, jsonComment.userimg, name, comment_time, msg);
+			var comment_count = document.querySelector(".comment_count");
+			comment_count.innerHTML = jsonComment.comment_count;
+
+			if (jsonComment.comment_count > 0) {
+				var comment = document.querySelector(".comment");
+				comment.style.display = "inline";
+			}
+			if (jsonComment.comment_count > jsonComment.comment_page_count) {
+				var comment = document.querySelector("#comment-pages");
+				comment.style.display = "inline";
+			} else {
+				var userimg = jsonComment.comments[0].userimg;
+				appendComment(jsonComment.comment_count, userimg, name, comment_time, msg);
+			}
 		}
 	};
 
 	xhr.send(data);
 
+	e.preventDefault();
 }

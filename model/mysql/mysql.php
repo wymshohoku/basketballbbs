@@ -55,5 +55,14 @@ namespace model\mysql {
             }
             return $result;
         }
+        public function prepareSQL($sql)
+        {
+            $stmt = $this->conn->prepare($sql);
+            if ($stmt->execute()) {
+                return $stmt;
+            }
+
+            return false;
+        }
     }
 }
