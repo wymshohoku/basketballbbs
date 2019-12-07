@@ -80,6 +80,7 @@ form.onsubmit = function (e) {
 			} else {
 				var userimg = jsonComment.comments[0].userimg;
 				appendComment(jsonComment.comment_count, userimg, name, comment_time, msg);
+				alert("评论已提交！");
 			}
 		}
 	};

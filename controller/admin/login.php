@@ -3,7 +3,7 @@
 require_once '../../model/common/util.php';
 require_once '../../model/mysql/mysql.php';
 
-use model\mysql\CPdo as CPDO;
+use model\mysql\Pdo;
 use model\util as Util;
 
 $admin = false;
@@ -17,6 +17,10 @@ function test_input($data)
 //  判断是否登陆
 if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
     header('location:../../view/admin/admin.html');
+    /* header('Content-Type:application/json; charset=utf-8');
+    $loc['location'] = '/view/admin/admin.html';
+    $json = json_encode($loc);
+    exit($json); */
 } else {
     //  验证失败，将 $_SESSION["admin"] 置为 false
     $_SESSION["admin"] = false;
@@ -30,7 +34,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
 
             $username = Util\DataVerify::filterWords($_POST['username']);
 
-            $pdo = new CPDO();
+            $pdo = new Pdo();
             $sql = "SELECT passwd FROM admin WHERE name='$username'";
             $stmt = $pdo->querySQL($sql);
 

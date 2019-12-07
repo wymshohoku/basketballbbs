@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            margin: 0;
+        }
+ 
+        .pg-header{
+            height: 48px;
+            background-color: #2459a2;
+            color: white;
+            line-height: 48px;
+        }
+        .pg-header .logo{
+            width: 200px;
+            text-align: center;
+        }
+        .pg-header .user{
+            width: 160px;
+            height: 48px;
+            position: relative;
+ 
+        }
+        .username{
+            width: 50px;
+            height: 48px;
+            line-height: 48px;
+            color: white;
+            position: absolute;
+            top: 0;
+            right: 62px;
+ 
+        }
+        .pg-header .user:hover{
+            background-color: #428bca;
+        }
+ 
+        .pg-header .user:hover .user_info{
+            display: block;
+        }
+ 
+        .pg-header .user a img{
+            width: 40px;
+            height: 40px;
+            margin-top: 4px;
+            border-radius: 50%;
+        }
+        .user_info{
+            position: absolute;
+            top: 48px;
+            right: 20px;
+            width: 140px;
+            background-color: #e6b3cd;
+            z-index: 20;
+            display: none;
+ 
+        }
+        .pg-content .menu{
+            position: fixed;
+            top: 48px;
+            left: 0;
+            bottom: 0;
+            width: 200px;
+            background-color: #2b3643;
+            display: block;
+        }
+        .pg-content .content{
+            position: fixed;
+            top: 48px;
+            right: 0;
+            bottom: 0;
+            left: 200px;
+            background-color: #dddddd;
+            overflow: auto;
+            z-index: 9;
+        }
+        .left{
+            float: left;
+        }
+        .right{
+            float: right;
+        }
+        .block{
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="pg-header">
+        <div class="logo left">
+            CEDARHD LOGO
+        </div>
+        <div class="user right">
+            <div>
+                <a href="#">
+                    <img src="../images/beach-ball.png">
+                </a>
+            </div>
+            <div class="username">
+                <span>KANG</span>
+            </div>
+            <div class="user_info">
+                <a class="block">我的资料</a>
+                <a class="block">注   销</a>
+            </div>
+        </div>
+    </header>
+    <main class="pg-content">
+        <div class="menu">aaaa</div>
+        <div class="menu">bbbb</div>
+        <div class="content">
+        </div>
+    </main>
+    <footer class="pg-footer">131</footer>
+</body>
+</html>
