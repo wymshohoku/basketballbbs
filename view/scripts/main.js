@@ -62,12 +62,14 @@ function addArticle(articles_count, jsonArticles) {
         a_article.href = "../../controller/index/bbs.php?art_id=" + article_index;
 
         a_article.innerHTML =
-        jsonArticles[article_index - 1].art_title;
+        jsonArticles[article_index - 1].title;
 
         art_list.appendChild(li_article);
     }
 }
 
 function callbackArticle(jsonArticles) {
-    addArticle(jsonArticles.art_count, jsonArticles.articles);
+    if(jsonArticles !== null){
+        addArticle(jsonArticles.count, jsonArticles.articles);
+    }
 }

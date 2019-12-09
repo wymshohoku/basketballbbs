@@ -15,10 +15,15 @@ namespace model\comment {
         private $datetime;
         private $msg;
         private $approval;
+        private $records;
+        private $bError;
+        private $bAllRecord;
         private static $comments = array();
 
         public function __construct()
         {
+            $this->bError = false;
+            $this->bAllRecord = false;
             $a = func_get_args();
             $i = count($a);
             if (method_exists($this, $f = '__construct' . $i)) {
@@ -45,6 +50,9 @@ namespace model\comment {
         }
         public function serialize()
         {
+            if ($this->bAllRecord || $this->bError) {
+                return $this->records;
+            }
             return array('commentid' => $this->id,
                 'userimg' => $this->user->serialize()['img'],
                 'username' => $this->user->serialize()['name'],
@@ -96,23 +104,56 @@ namespace model\comment {
             }
             return 0;
         }
+        public function getTable()
+        {
+            $this->bAllRecord = true;
+
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "SELECT * FROM comments";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            $index = 0;
+            while ($row = $stmt->fetch()) {
+                $this->records[$index]["id"] = $row["id"];
+                $this->records[$index]["articleid"] = $row["articleid"];
+                $this->records[$index]["userid"] = $row["userid"];
+                $this->records[$index]["comment"] = $row["comment"];
+                $this->records[$index]["date"] = $row["date"];
+                $this->records[$index]["approval"] = $row["approval"];
+                $index += 1;
+            }
+            $this->records["count"] = $index;
+            return true;
+        }
         public function insertRecord()
         {
             $userid = $this->user->selectUserByNameOrInsertUser();
 
             if ($userid != false) {
+                if($this->msg === null){
+                    $this->bError = true;
+                    $this->bAllRecord["error"][] = "留言内容包含非法字符！";
+                    return false;
+                }
                 // 插入新的评论到数据库
                 $pdo = new Pdo();
-                $sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES('" . $this->articleid . "','" . $userid . "','" . $this->msg . "','" . $this->datetime . "','2')";
+                //$sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES('" . $this->articleid . "','" . $userid . "','" . $this->msg . "','" . $this->datetime . "','2')";
+                $sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES(?, ?, ?, ?, '2')";
                 //$sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES('1','2','11111','2019-12-02 18:09:09','2')";
                 try {
-                    $stmt = $pdo->prepareSQL($sql);
+                    $stmt = $pdo->prepareSQL($sql, array($this->articleid, $userid, $this->msg, $this->datetime));
                     return $stmt;
 
                 } catch (PDOException $e) {
                     echo $sql . "<br>" . $e->getMessage();
                     return false;
                 }
+            } else {
+                $this->bError = true;
+                $this->records = $this->user->serialize();
             }
             return false;
         }

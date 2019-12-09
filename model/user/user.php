@@ -7,13 +7,15 @@ namespace model\user {
     class user
     {
         private $id;
-        private $userimg = '//upload.jianshu.io/users/upload_avatars/2571348/ca2d531d-05db-4172-817d-582436cf6ea1.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/80/h/80/format/webp';
+        private $userimg = '../../view/images/touxiang.webp';
         private $username;
         private $records;
+        private $bError;
         private $bAllRecord;
 
         public function __construct()
         {
+            $this->bError = false;
             $this->bAllRecord = false;
             $a = func_get_args();
             $i = count($a);
@@ -23,7 +25,7 @@ namespace model\user {
         }
         public function serialize()
         {
-            if ($this->bAllRecord) {
+            if ($this->bAllRecord || $this->bError) {
                 return $this->records;
             }
             return array('name' => $this->username, 'img' => $this->userimg);
@@ -51,6 +53,7 @@ namespace model\user {
             }
             $index = 0;
             while($row = $stmt->fetch()){
+                $this->records[$index]["id"] = $row["id"];
                 $this->records[$index]["name"] = $row["name"];
                 $this->records[$index]["img"] = $row["img"];
                 $index += 1;
@@ -84,14 +87,25 @@ namespace model\user {
         }
         public function selectUserByNameOrInsertUser()
         {
+            if($this->username == null){
+                $this->bError = true;
+                $this->records["error"][] = "昵称包含非法字符！";
+                return false;
+            }
+            /* if($this->img == null){
+                $this->bError = true;
+                $this->records["error"][] = "图片路径包含非法字符！";
+                return false;
+            } */
             // 查询用户
             $row = $this->isUserExist($this->username);
 
             // 用户不存在
             if ($row === false) {
                 $pdo = new Pdo();
-                $sql = "INSERT INTO users (name, img) VALUES('" . $this->username . "','" . $this->userimg . "')";
-                $stmt = $pdo->prepareSQL($sql);
+                //$sql = "INSERT INTO users (name, img) VALUES('" . $this->username . "','" . $this->userimg . "')";
+                $sql = "INSERT INTO users (name, img) VALUES(?, ?)";
+                $stmt = $pdo->prepareSQL($sql, array($this->username, $this->userimg));
                 if ($stmt != false) {
                     //$pdo->closeConnect();
                     $this->id = $this->isUserExist($this->username)['id'];

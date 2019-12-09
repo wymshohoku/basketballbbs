@@ -1,17 +1,23 @@
 <?php
 
-namespace model\article{
+namespace model\article {
     require_once '../../model/mysql/mysql.php';
     require_once '../../model/comment/comment.php';
 
-    use model\mysql\Pdo;
     use model\comment\comment;
+    use model\mysql\Pdo;
+
+    \define('COMMENT_PAGE_COUNT', 5);
+    \define('ARTICLE_TABLE_NAME', 'article');
 
     class article
     {
         private $art_id;
         private $art_title;
         private $art_text;
+        private $records;
+        private $bAllRecord;
+        private $bError;
         private $comment_current_page_count = 0;
         private $comment_pre_paga_count = COMMENT_PAGE_COUNT; // 每一页评论的数量;
         private $comment_page_index = 0;
@@ -19,8 +25,17 @@ namespace model\article{
         private $comment_count = 0; // 总共的评论
         private $comment_array = array();
 
+        public function __construct()
+        {
+            $this->bError = false;
+            $this->bAllRecord = false;
+        }
         public function serialize()
         {
+            if ($this->bAllRecord || $this->bError) {
+                return $this->records;
+            }
+            $article_json['haserror'] = false;
             $article_json['art_id'] = $this->art_id;
             $article_json['art_title'] = $this->art_title;
             $article_json['art_text'] = $this->art_text;
@@ -32,10 +47,32 @@ namespace model\article{
             $article_json['comments'] = $this->comment_array;
             return $article_json;
         }
+        public function getTable()
+        {
+            $this->bAllRecord = true;
+
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "SELECT * FROM " . ARTICLE_TABLE_NAME;
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            $index = 0;
+            while ($row = $stmt->fetch()) {
+                $this->records["articles"][$index]["id"] = $row["id"];
+                $this->records["articles"][$index]["title"] = $row["title"];
+                $this->records["articles"][$index]["text"] = $row["text"];
+                $index += 1;
+            }
+            $this->records["pages"] = 4;
+            $this->records["count"] = $index;
+            return true;
+        }
         public function getRecordById($artid, $comment_current_page_index)
         {
             $pdo = new Pdo();
-            $sql = "SELECT title, text FROM article WHERE id='" . $artid . "'";
+            $sql = "SELECT title, text FROM " . ARTICLE_TABLE_NAME . " WHERE id='" . $artid . "'";
             $stmt = $pdo->querySQL($sql);
             if ($stmt === false) {
                 return false;
@@ -57,7 +94,7 @@ namespace model\article{
             $_SESSION['comment_count'] = $this->comment_count;
             $this->comment_array = comment::getComments();
 
-            $this->comment_pages = (int)($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
+            $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
             return true;
         }
         public function insertRecord()
@@ -76,9 +113,11 @@ namespace model\article{
                 $this->comment_count = $_SESSION['comment_count'];
                 $this->comment_array[] = $comment->serialize();
 
-                $this->comment_pages = (int)($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
+                $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
             } else { // 插入数据失败
-
+                $this->bError = true;
+                $this->records = $comment->serialize();
+                $this->records["haserror"] = true;
             }
         }
     }

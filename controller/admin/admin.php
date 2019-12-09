@@ -19,6 +19,6 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
     header('Content-Type:application/json; charset=utf-8');
     exit($json);
 } else {
-    header('location:../../view/admin/login.html');
+    //header('location:../../view/admin/login.html');
     exit("");
 }

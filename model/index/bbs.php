@@ -7,7 +7,6 @@ namespace model\index {
     use model\util as Util;
     use model\article\article;
 
-    \define('COMMENT_PAGE_COUNT', 5);
     function test_input($data)
     {
         return Util\DataVerify::test_input($data);

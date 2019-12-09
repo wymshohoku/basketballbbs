@@ -32,7 +32,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
         if (isset($_POST['password'])) {
             $isLogin = false;
 
-            $username = Util\DataVerify::filterWords($_POST['username']);
+            $username = test_input($_POST['username']);
 
             $pdo = new Pdo();
             $sql = "SELECT passwd FROM admin WHERE name='$username'";

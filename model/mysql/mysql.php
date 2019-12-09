@@ -55,10 +55,10 @@ namespace model\mysql {
             }
             return $result;
         }
-        public function prepareSQL($sql)
+        public function prepareSQL($sql, $params)
         {
             $stmt = $this->conn->prepare($sql);
-            if ($stmt->execute()) {
+            if ($stmt->execute($params)) {
                 return $stmt;
             }
 
