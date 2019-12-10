@@ -40,15 +40,17 @@ namespace model\index {
         public function getArticle($comment_current_page_index)
         {
             $index = test_input($comment_current_page_index);
+            $curr_index = $_SESSION['comment_current_page_index'];
             if ($index === "prev") {
-                $_SESSION['comment_current_page_index'] -= 1;
+                $curr_index -= 1;
             } else if ($index === "next") {
-                $_SESSION['comment_current_page_index'] += 1;
+                $curr_index += 1;
             } else {
-                $_SESSION['comment_current_page_index'] = (int)$index;
+                $curr_index = (int)$index;
             }
             // 从数据库读取当前文章的评论
-            if ($this->art->getRecordById($_SESSION['art_id'], $_SESSION['comment_current_page_index']) === false) {
+            $ret = $this->art->getRecordById($_SESSION['art_id'], $curr_index);
+            if ($ret === false) {
                 header('location:../../view/error/404.html');
                 exit();
             }
