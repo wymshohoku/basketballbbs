@@ -104,6 +104,45 @@ namespace model\comment {
             }
             return 0;
         }
+        public function deleteRecordByUserId($id)
+        {
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "DELETE FROM comments WHERE userid = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            return true;
+        }
+        public function deleteRecordByArticleId($id)
+        {
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "DELETE FROM comments WHERE articleid = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            return true;
+        }
+        public function deleteRecord($index, $id)
+        {
+            $this->bAllRecord = true;
+            
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "DELETE FROM comments WHERE id = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                $this->records["result"] = false;
+                return false;
+            }
+            $this->records["result"] = true;
+            $this->records["index"] = $index;
+            $this->records["name"] = "comment";
+            return true;
+        }
         public function getTable()
         {
             $this->bAllRecord = true;

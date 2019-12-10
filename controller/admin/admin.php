@@ -9,9 +9,19 @@ session_start();
 if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
 
     $json = "";
-    if (isset($_POST["func_name"])) {
-        $admin = new Admin($_POST["func_name"]);
-        $admin->getTable();
+    if (isset($_POST["src"]) && isset($_POST["func"])) {
+        $admin = new Admin($_POST["src"]);
+        if ($_POST["func"] === "select_all") {
+            $admin->getTable();
+        } elseif ($_POST["func"] === "delete") {
+            if (isset($_POST["index"])) {
+                $admin->deleteRecord($_POST["index"], $_POST["id"]);
+            }
+        } elseif ($_POST["func"] === "approval") {
+            if (isset($_POST["index"])) {
+
+            }
+        }
 
         $json = json_encode($admin->serialize());
     }

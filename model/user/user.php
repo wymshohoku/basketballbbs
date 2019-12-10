@@ -40,6 +40,23 @@ namespace model\user {
             // 图片使用默认图片
             //$this->userimg = $img;
         }
+        public function deleteRecord($index, $id)
+        {
+            $this->bAllRecord = true;
+
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "DELETE FROM users WHERE id = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                $this->records["result"] = false;
+                return false;
+            }
+            $this->records["result"] = true;
+            $this->records["index"] = $index;
+            $this->records["name"] = "user";
+            return true;
+        }
         public function getTable()
         {
             $this->bAllRecord = true;
@@ -52,7 +69,7 @@ namespace model\user {
                 return false;
             }
             $index = 0;
-            while($row = $stmt->fetch()){
+            while ($row = $stmt->fetch()) {
                 $this->records[$index]["id"] = $row["id"];
                 $this->records[$index]["name"] = $row["name"];
                 $this->records[$index]["img"] = $row["img"];
@@ -87,15 +104,15 @@ namespace model\user {
         }
         public function selectUserByNameOrInsertUser()
         {
-            if($this->username == null){
+            if ($this->username == null) {
                 $this->bError = true;
                 $this->records["error"][] = "昵称包含非法字符！";
                 return false;
             }
             /* if($this->img == null){
-                $this->bError = true;
-                $this->records["error"][] = "图片路径包含非法字符！";
-                return false;
+            $this->bError = true;
+            $this->records["error"][] = "图片路径包含非法字符！";
+            return false;
             } */
             // 查询用户
             $row = $this->isUserExist($this->username);

@@ -47,6 +47,23 @@ namespace model\article {
             $article_json['comments'] = $this->comment_array;
             return $article_json;
         }
+        public function deleteRecord($index, $id)
+        {
+            $this->bAllRecord = true;
+            
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "DELETE FROM ". ARTICLE_TABLE_NAME ." WHERE id = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                $this->records["result"] = false;
+                return false;
+            }
+            $this->records["result"] = true;
+            $this->records["index"] = $index;
+            $this->records["name"] = "article";
+            return true;
+        }
         public function getTable()
         {
             $this->bAllRecord = true;

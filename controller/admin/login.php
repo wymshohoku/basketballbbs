@@ -16,11 +16,11 @@ function test_input($data)
 }
 //  判断是否登陆
 if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
-    header('location:../../view/admin/admin.html');
-    /* header('Content-Type:application/json; charset=utf-8');
+    //header('location:../../view/admin/admin.html');
+    header('Content-Type:application/json; charset=utf-8');
     $loc['location'] = '/view/admin/admin.html';
     $json = json_encode($loc);
-    exit($json); */
+    exit($json); 
 } else {
     //  验证失败，将 $_SESSION["admin"] 置为 false
     $_SESSION["admin"] = false;

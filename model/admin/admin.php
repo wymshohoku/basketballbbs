@@ -17,20 +17,21 @@ namespace model\admin {
     class Admin
     {
         private $func;
+        private $func_name;
         private $records;
         private $bAllRecord;
 
         public function __construct($func)
         {
             $this->bAllRecord = false;
-            $f = Util\DataVerify::test_input($func);
-            if ($f == 'user') {
+            $this->func_name = $func;
+            if ($this->func_name == 'user') {
                 $this->func = new user();
-            } else if ($f == 'article') {
+            } else if ($this->func_name == 'article') {
                 $this->func = new article();
-            } else if ($f == 'comment') {
+            } else if ($this->func_name == 'comment') {
                 $this->func = new comment();
-            } else if ($f == 'my') {
+            } else if ($this->func_name == 'my') {
                 $this->func = $this;
             }
         }
@@ -40,6 +41,31 @@ namespace model\admin {
                 return $this->records;
             }
             return $this->func->serialize();
+        }
+        public function deleteRecord($index, $id)
+        {
+            $index = Util\DataVerify::test_input($index);
+            $id = Util\DataVerify::test_input($id);
+
+            if($this->func_name == "user"){
+                // 删除用户时，需要删除该用户的评论
+                $comment = new comment();
+                if($comment->deleteRecordByUserId($id) === false){
+                    $this->bAllRecord = true;
+                    $this->records["result"]=false;
+                    return false;
+                }
+            }
+            if($this->func_name == "article"){
+                // 删除文章时，要把该文章的评论删除
+                $comment = new comment();
+                if($comment->deleteRecordByArticleId($id) === false){
+                    $this->bAllRecord = true;
+                    $this->records["result"]=false;
+                    return false;
+                }
+            }
+            $this->func->deleteRecord($index, $id);
         }
         public function getTable()
         {
