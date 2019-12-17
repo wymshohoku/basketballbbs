@@ -8,14 +8,22 @@ window.addEventListener("load", function () {
 		var comment_time = new Date().Format("yyyy-MM-dd hh:mm:ss");
 		var art_id = document.querySelector(".art_title").id;
 		var name = form.querySelector("#username").value;
+		var passwd = form.querySelector("#passwd").value;
 		var msg = form.querySelector("#msg").value;
+		var code = form.querySelector("#authcode").value;
+		var token = form.querySelector("#token").value;
 
 		if (name === "") {
 			alert("请输入昵称！");
 		} else if (msg === "") {
-			alert("请输入留言内容！")
+			alert("请输入留言内容！");
+		} else if (code === "") {
+			alert("请输入验证码！");
+		} else if (token === "" && passwd === "") {
+			alert("未登陆或已过期，请输入登陆密码！");
 		} else {
-			var data = "art_id=" + art_id + "&username=" + name + "&msg=" + msg + "&time=" + comment_time;
+			var data = "art_id=" + art_id + "&username=" + name + "&pwd=" + passwd + "&msg=" + msg +
+				"&authcode=" + code + "&time=" + comment_time + "&token=" + token;
 
 			let xhr = new XMLHttpRequest();
 			xhr.open("POST", "../../controller/index/bbs.php");
@@ -40,6 +48,7 @@ window.addEventListener("load", function () {
 						} else {
 							if (jsonComment.haserror == true) {
 								alert(jsonComment.error[0]);
+								form.querySelector("#authcode").value = "";
 							}
 							else {
 								var userimg = jsonComment.comments[0].userimg;
@@ -47,7 +56,11 @@ window.addEventListener("load", function () {
 								pageClick(1);
 								alert("评论已提交！");
 								form.querySelector("#msg").value = "";
+								form.querySelector("#authcode").value = "";
+								form.querySelector("#passwd").display = "none";
 							}
+							form.querySelector("#token").value = jsonComment.token;
+							document.getElementById('captcha_img').src = '../../controller/index/bbs.php?r=' + Math.random();
 						}
 					}
 				}
@@ -118,7 +131,6 @@ function callbackArticle(jsonArticle) {
 			comment_count.innerHTML = jsonArticle.comment_count;
 			addComment(jsonArticle.comment_current_page_count, jsonArticle.comment_pre_paga_count, jsonArticle.comment_page_index, jsonArticle.comments);
 		}
-		showOrHidePage(jsonArticle.comment_count, jsonArticle.comment_pre_paga_count);
 
 		setPageCount(jsonArticle);
 	}

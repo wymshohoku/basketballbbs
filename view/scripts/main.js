@@ -50,7 +50,7 @@ function loadArticle(url, callback) {
     xhr.send();
 }
 
-// 添加评论
+// 添加文章
 function addArticle(articles_count, jsonArticles) {
     var art_list = document.querySelector("#art_list");
     for (var article_index = 1; article_index <= articles_count; article_index++) {
@@ -59,17 +59,18 @@ function addArticle(articles_count, jsonArticles) {
         li_article.appendChild(a_article);
 
         // 设置链接
-        a_article.href = "../../controller/index/bbs.php?art_id=" + article_index;
+        a_article.href = "../../controller/index/bbs.php?art_id=" + article_index +
+            "&token=" + jsonArticles[article_index - 1].token;
 
         a_article.innerHTML =
-        jsonArticles[article_index - 1].title;
+            jsonArticles[article_index - 1].title;
 
         art_list.appendChild(li_article);
     }
 }
 
 function callbackArticle(jsonArticles) {
-    if(jsonArticles !== null){
+    if (jsonArticles !== null) {
         addArticle(jsonArticles.count, jsonArticles.articles);
     }
 }

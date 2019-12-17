@@ -2,13 +2,17 @@
 
 namespace model\user {
     require_once '../../model/mysql/mysql.php';
+
     use model\mysql\Pdo;
 
     class user
     {
         private $id;
-        private $userimg = '../../view/images/touxiang.webp';
+        private $passwd;
         private $username;
+        private $userimg = '../../view/images/touxiang.webp';
+        private $token;
+        private $expire_time;
         private $records;
         private $bError;
         private $bAllRecord;
@@ -39,6 +43,24 @@ namespace model\user {
             $this->username = $name;
             // 图片使用默认图片
             //$this->userimg = $img;
+        }
+        public function getUserToken($name)
+        {
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "SELECT * FROM users WHERE name='" . $name . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            $row = $stmt->fetch();
+            return array(
+                "id"=>$row["id"],
+                "name" => $row["name"],
+                "passwd" => $row["passwd"],
+                "token" => $row["token"],
+                "expire_time" => $row["expire_time"],
+            );
         }
         public function deleteRecord($index, $id)
         {

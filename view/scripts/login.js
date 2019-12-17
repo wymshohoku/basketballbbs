@@ -1,5 +1,10 @@
 window.addEventListener("load", function () {
-    loadArticle("../../controller/admin/login.php", "POST");
+    //loadArticle("../../controller/admin/login.php", "POST");
+    var form = document.querySelector("#login");
+	form.onsubmit = function (e) {
+		var passwd = form.querySelector("#password").value;
+		form.querySelector("#password").value = md5(passwd);
+    }
 });
 
 function loadArticle(url, method) {

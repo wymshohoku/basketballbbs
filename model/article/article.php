@@ -3,9 +3,11 @@
 namespace model\article {
     require_once '../../model/mysql/mysql.php';
     require_once '../../model/comment/comment.php';
+    require_once '../../model/common/token.php';
 
     use model\comment\comment;
     use model\mysql\Pdo;
+    use model\common\Token;
 
     \define('COMMENT_PAGE_COUNT', 5);
     \define('ARTICLE_TABLE_NAME', 'article');
@@ -35,6 +37,9 @@ namespace model\article {
             if ($this->bAllRecord || $this->bError) {
                 return $this->records;
             }
+            $token = $this->getToken($this->art_id);
+
+            $article_json['token'] = $token;
             $article_json['haserror'] = false;
             $article_json['art_id'] = $this->art_id;
             $article_json['art_title'] = $this->art_title;
@@ -47,13 +52,40 @@ namespace model\article {
             $article_json['comments'] = $this->comment_array;
             return $article_json;
         }
+        public function getToken($id, $secret = "")
+        {
+            $t = new Token();
+            if ($secret === "") {
+                $secret = $this->getSecret($id);
+            }
+            $token = $t->api_token($id, $secret);
+            return $token;
+        }
+        public function checkToken($id, $token)
+        {
+            $t = new Token();
+            $secret = $this->getSecret($id);
+            return $t->check_api_token($id, $secret, $token);
+        }
+        public function getSecret($id)
+        {
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "SELECT secret FROM " . ARTICLE_TABLE_NAME . " WHERE id='" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                return false;
+            }
+            $row = $stmt->fetch();
+            return $row[0];
+        }
         public function deleteRecord($index, $id)
         {
             $this->bAllRecord = true;
-            
+
             $pdo = new Pdo();
             // 查询用户
-            $sql = "DELETE FROM ". ARTICLE_TABLE_NAME ." WHERE id = '" . $id . "'";
+            $sql = "DELETE FROM " . ARTICLE_TABLE_NAME . " WHERE id='" . $id . "'";
             $stmt = $pdo->querySQL($sql);
             if ($stmt === false) {
                 $this->records["result"] = false;
@@ -80,6 +112,10 @@ namespace model\article {
                 $this->records["articles"][$index]["id"] = $row["id"];
                 $this->records["articles"][$index]["title"] = $row["title"];
                 $this->records["articles"][$index]["text"] = $row["text"];
+
+                $t = new Token();
+                $this->records["articles"][$index]['token'] =
+                    $this->getToken($row["id"], $row["secret"]);
                 $index += 1;
             }
             $this->records["pages"] = 4;
@@ -105,17 +141,24 @@ namespace model\article {
 
             // 获取评论的总数
             $this->comment_count = comment::getAllRecordsByArticleId($this->art_id);
+
+            // 判断分页是否超出范围
+            $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
+            if ($this->comment_pages < $comment_current_page_index)
+                $this->comment_page_index = $this->comment_pages;
+
+            // 获取当前分页的评论
             $offset = ($this->comment_page_index - 1) * COMMENT_PAGE_COUNT;
             // 获取当前页评论的数量
             $this->comment_current_page_count = comment::getRecordForCurrentPageByArticleId($this->art_id, COMMENT_PAGE_COUNT, $offset);
             $_SESSION['comment_count'] = $this->comment_count;
             $this->comment_array = comment::getComments();
 
-            $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
-            return true;
+            return $this->comment_page_index;
         }
         public function insertRecord()
-        {}
+        {
+        }
 
         public function insertComment($artid, $name, $msg, $datetime)
         {
