@@ -28,7 +28,7 @@ namespace model\mysql {
                     $this->username, $this->password);
                 // 设置 PDO 错误模式，用于抛出异常
                 $this->conn->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->error = $e->getMessage();
             }
         }
@@ -49,7 +49,7 @@ namespace model\mysql {
         {
             try {
                 $result = $this->conn->query($sql);
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 $this->error = "Error: " . $e->getMessage();
                 return false;
             }

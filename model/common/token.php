@@ -1,7 +1,7 @@
 <?php
 
-namespace model\common{
-    
+namespace model\common {
+
     require_once '../../model/mysql/mysql.php';
 
     use model\mysql\Pdo;
@@ -18,9 +18,9 @@ namespace model\common{
         }
         public function user_token($before, $after)
         {
-            return md5($before, $after);
+            return md5($before . $after);
         }
-        
+
         public function check_user_token($before, $after, $token)
         {
             return $token === $this->user_token($before, $after);

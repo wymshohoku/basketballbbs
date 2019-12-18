@@ -26,6 +26,7 @@ namespace model\article {
         private $comment_pages = 0; // 总共的评论页数
         private $comment_count = 0; // 总共的评论
         private $comment_array = array();
+        private $article_json;
 
         public function __construct()
         {
@@ -39,18 +40,18 @@ namespace model\article {
             }
             $token = $this->getToken($this->art_id);
 
-            $article_json['token'] = $token;
-            $article_json['haserror'] = false;
-            $article_json['art_id'] = $this->art_id;
-            $article_json['art_title'] = $this->art_title;
-            $article_json['art_text'] = $this->art_text;
-            $article_json['comment_current_page_count'] = $this->comment_current_page_count;
-            $article_json['comment_pre_paga_count'] = $this->comment_pre_paga_count;
-            $article_json['comment_page_index'] = $this->comment_page_index;
-            $article_json['comment_pages'] = $this->comment_pages;
-            $article_json['comment_count'] = $this->comment_count;
-            $article_json['comments'] = $this->comment_array;
-            return $article_json;
+            $this->article_json['token'] = $token;
+            $this->article_json['haserror'] = false;
+            $this->article_json['art_id'] = $this->art_id;
+            $this->article_json['art_title'] = $this->art_title;
+            $this->article_json['art_text'] = $this->art_text;
+            $this->article_json['comment_current_page_count'] = $this->comment_current_page_count;
+            $this->article_json['comment_pre_paga_count'] = $this->comment_pre_paga_count;
+            $this->article_json['comment_page_index'] = $this->comment_page_index;
+            $this->article_json['comment_pages'] = $this->comment_pages;
+            $this->article_json['comment_count'] = $this->comment_count;
+            $this->article_json['comments'] = $this->comment_array;
+            return $this->article_json;
         }
         public function getToken($id, $secret = "")
         {
@@ -160,24 +161,32 @@ namespace model\article {
         {
         }
 
-        public function insertComment($artid, $name, $msg, $datetime)
+        public function insertComment($artid, $name, $msg, $datetime, $userid, $pwd, $token)
         {
-            $comment = new comment($artid, $name, $msg, $datetime);
-            $result = $comment->insertRecord();
+            $comment = new comment($artid, $name, $msg, $datetime, $userid, '2');
+            $this->records = $comment->isLogin($pwd, $token);
+            if ($this->records["haserror"] === false) {
+                $result = $comment->insertRecord();
 
-            if ($result != false) { // 插入数据成功
-                $this->art_id = $_SESSION['art_id'];
-                $this->comment_pre_paga_count = COMMENT_PAGE_COUNT;
-                $this->comment_pages = 0;
-                $_SESSION['comment_count'] += 1;
-                $this->comment_count = $_SESSION['comment_count'];
-                $this->comment_array[] = $comment->serialize();
+                if ($result != false) { // 插入数据成功
+                    $this->bAllRecord = true;
+                    $this->art_id = $_SESSION['art_id'];
+                    $this->comment_pre_paga_count = COMMENT_PAGE_COUNT;
+                    $this->comment_pages = 0;
+                    $_SESSION['comment_count'] += 1;
+                    $this->comment_count = $_SESSION['comment_count'];
+                    //$this->comment_array[] = $comment->serialize();
 
-                $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
-            } else { // 插入数据失败
+                    $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
+                } else { // 插入数据失败
+                    $this->bError = true;
+                    $this->records = $comment->serialize();
+                    $this->records["haserror"] = true;
+                }
+            }else{
                 $this->bError = true;
-                $this->records = $comment->serialize();
-                $this->records["haserror"] = true;
+                // $this->records = $comment->serialize();
+                // $this->records["haserror"] = true;
             }
         }
     }

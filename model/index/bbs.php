@@ -31,7 +31,7 @@ namespace model\index {
         }
         public function serialize()
         {
-            if($this->berror){
+            if ($this->berror) {
                 return $this->msg;
             }
             return $this->art->serialize();
@@ -57,7 +57,7 @@ namespace model\index {
         public function getArticle($comment_current_page_index)
         {
             $index = test_input($comment_current_page_index);
-            if(!isset($_SESSION['comment_current_page_index'])){
+            if (!isset($_SESSION['comment_current_page_index'])) {
                 $_SESSION['comment_current_page_index'] = 1;
             }
             $curr_index = $_SESSION['comment_current_page_index'];
@@ -101,7 +101,7 @@ namespace model\index {
             }
             return false;
         }
-        
+
         public static function isAuthCode()
         {
             if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['r'])) {
@@ -115,8 +115,10 @@ namespace model\index {
         }
         public static function isUserSubmitComment()
         {
-            if ($_SERVER['REQUEST_METHOD'] === 'POST'
-                && !empty($_POST) && isset($_POST['art_id'])) {
+            if (
+                $_SERVER['REQUEST_METHOD'] === 'POST'
+                && !empty($_POST) && isset($_POST['art_id'])
+            ) {
                 return true;
             }
             return false;
@@ -132,16 +134,19 @@ namespace model\index {
             $this->msg['error'][] = '验证码不正确，请重新输入！';
             return false;
         }
-        public function submitComment()
+        public function submitComment($art_id, $name, $msg, $datetime, $userid, $pwd, $token)
         {
-            $art_id = test_input($_POST['art_id']);
+            $this->berror = true;
+            $this->msg['haserror'] = true;
+            $this->msg['error'][] = '文章ID错误！';
+            $art_id = test_input($art_id);
             // 提交的评论的文章id是否是当前访问的文章id
             if ($art_id === $_SESSION['art_id']) {
-                $name = test_input($_POST['username']);
-                $msg = test_input($_POST['msg']);
-                $datetime = test_input($_POST['time']);
-                $this->art->insertComment($art_id, $name, $msg, $datetime);
+                $this->msg = $this->art->insertComment($art_id, test_input($name), test_input($msg), test_input($datetime), test_input($userid), test_input($pwd), test_input($token));
+                $this->berror = $this->msg['haserror'];
             }
+
+            return $this->berror;
         }
     }
 }

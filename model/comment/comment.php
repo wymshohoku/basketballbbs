@@ -30,6 +30,7 @@ namespace model\comment {
                 call_user_func_array(array($this, $f), $a);
             }
         }
+        
         public function __construct4($artid, $name, $msg, $datetime)
         {
             $this->articleid = $artid;
@@ -48,14 +49,25 @@ namespace model\comment {
             $this->msg = $msg;
             $this->approval = $approval;
         }
+
+        public function __construct6($artid, $name, $msg, $datetime, $userid, $approval)
+        {
+            $this->user = new user($userid, $name, 'img');
+            $this->articleid = $artid;
+            $this->datetime = $datetime;
+            $this->msg = $msg;
+            $this->approval = $approval;
+        }
         public function serialize()
         {
             if ($this->bAllRecord || $this->bError) {
                 return $this->records;
             }
             return array('commentid' => $this->id,
-                'userimg' => $this->user->serialize()['img'],
+                //'userid' => $this->user->serialize()['id'],
                 'username' => $this->user->serialize()['name'],
+                'userimg' => $this->user->serialize()['img'],
+                //'token' => $this->user->serialize()['token'],
                 'time' => $this->datetime,
                 'msg' => $this->msg,
             );
@@ -186,7 +198,7 @@ namespace model\comment {
                     $stmt = $pdo->prepareSQL($sql, array($this->articleid, $userid, $this->msg, $this->datetime));
                     return $stmt;
 
-                } catch (PDOException $e) {
+                } catch (\PDOException $e) {
                     echo $sql . "<br>" . $e->getMessage();
                     return false;
                 }
@@ -195,6 +207,10 @@ namespace model\comment {
                 $this->records = $this->user->serialize();
             }
             return false;
+        }
+        public function isLogin($pwd, $token)
+        {
+            return $this->user->isLogin($pwd, $token);
         }
     }
 }

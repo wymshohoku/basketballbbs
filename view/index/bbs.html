@@ -73,13 +73,14 @@
 			<!-- 此处包含一个 article（一篇文章），内容略…… -->
 			<form id="commentForm">
 				<div>
+					<input type="hidden" id="userid" value="" />
 					<input type="hidden" id="token" value="" />
 					<label for="name">昵称：</label>
 					<input type="text" id="username" name="username" required />
 				</div>
 				<div id="wd" style="display: none;">
 					<label for="passwd">密码：</label>
-					<input type="password" id="passwd" name="passwd" required />
+					<input type="hidden" id="password" name="password" required />
 				</div>
 				<div>
 					<label for="msg">留言内容：</label>

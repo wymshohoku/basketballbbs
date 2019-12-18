@@ -27,7 +27,15 @@ if (CBbs::isUserClickArticle()) { // 用户点击文章链接
         // 验证提交评论的验证码
         if ($bbs->checkAuthCode($_POST['authcode'])) {
             // 提交评论
-            $bbs->submitComment();
+            $bbs->submitComment(
+                $_POST['art_id'],
+                $_POST['username'],
+                $_POST['msg'],
+                $_POST['time'],
+                $_POST['id'],
+                $_POST['pwd'],
+                $_POST['token']
+            );
         }
     } else {
         // 用户点击了文章链接跳转，获取该文章和所有评论

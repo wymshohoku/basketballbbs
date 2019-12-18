@@ -7,8 +7,9 @@ window.addEventListener("load", function () {
 	form.onsubmit = function (e) {
 		var comment_time = new Date().Format("yyyy-MM-dd hh:mm:ss");
 		var art_id = document.querySelector(".art_title").id;
+		var user_id = form.querySelector("#userid").value;
 		var name = form.querySelector("#username").value;
-		var passwd = form.querySelector("#passwd").value;
+		var passwd = form.querySelector("#password").value;
 		var msg = form.querySelector("#msg").value;
 		var code = form.querySelector("#authcode").value;
 		var token = form.querySelector("#token").value;
@@ -21,8 +22,10 @@ window.addEventListener("load", function () {
 			alert("请输入验证码！");
 		} else if (token === "" && passwd === "") {
 			alert("未登陆或已过期，请输入登陆密码！");
+			form.querySelector("#wd").style.display = "inline";
+			form.querySelector("#password").type = "password";
 		} else {
-			var data = "art_id=" + art_id + "&username=" + name + "&pwd=" + passwd + "&msg=" + msg +
+			var data = "art_id=" + art_id + "&id=" + user_id + "&username=" + name + "&pwd=" + passwd + "&msg=" + msg +
 				"&authcode=" + code + "&time=" + comment_time + "&token=" + token;
 
 			let xhr = new XMLHttpRequest();
@@ -48,17 +51,21 @@ window.addEventListener("load", function () {
 						} else {
 							if (jsonComment.haserror == true) {
 								alert(jsonComment.error[0]);
-								form.querySelector("#authcode").value = "";
+								form.querySelector("#wd").style.display = "inline";
+								form.querySelector("#password").type = "password";
 							}
 							else {
-								var userimg = jsonComment.comments[0].userimg;
+								//var userimg = jsonComment.comments[0].userimg;
 								//appendComment(jsonComment.comment_count, userimg, name, comment_time, msg);
 								pageClick(1);
 								alert("评论已提交！");
 								form.querySelector("#msg").value = "";
-								form.querySelector("#authcode").value = "";
-								form.querySelector("#passwd").display = "none";
+								form.querySelector("#wd").style.display = "none";
+								form.querySelector("#password").type = "hidden";
 							}
+							form.querySelector("#authcode").value = "";
+							form.querySelector("#password").value = "";
+							form.querySelector("#userid").value = jsonComment.id;
 							form.querySelector("#token").value = jsonComment.token;
 							document.getElementById('captcha_img').src = '../../controller/index/bbs.php?r=' + Math.random();
 						}

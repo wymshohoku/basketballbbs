@@ -33,4 +33,28 @@ namespace model\util {
             return $data;
         }
     }
+
+    class DateTime
+    {
+        public static function getDates($startdate, $enddate)
+        {
+            $date=floor((strtotime($enddate)-strtotime($startdate))/86400);
+            return $date;
+        }
+        public static function getHours($startdate, $enddate)
+        {
+            $hour=floor((strtotime($enddate)-strtotime($startdate))%86400/3600);
+            return $hour;
+        }
+        public static function getMinutes($startdate, $enddate)
+        {
+            $minute=floor((strtotime($enddate)-strtotime($startdate))%86400/60);
+            return $minute;
+        }
+        public static function getSeconds($startdate, $enddate)
+        {
+            $second=floor((strtotime($enddate)-strtotime($startdate))%86400%60);
+            return $second;
+        }
+    }
 }
