@@ -212,5 +212,22 @@ namespace model\comment {
         {
             return $this->user->isLogin($pwd, $token);
         }
+        public function updateCommentApproval($index, $id)
+        {
+            $this->bAllRecord = true;
+            
+            $pdo = new Pdo();
+            // 查询用户
+            $sql = "UPDATE comments SET approval=2 WHERE id = '" . $id . "'";
+            $stmt = $pdo->querySQL($sql);
+            if ($stmt === false) {
+                $this->records["result"] = false;
+                return false;
+            }
+            $this->records["result"] = true;
+            $this->records["index"] = $index;
+            $this->records["name"] = "comment";
+            return true;
+        }
     }
 }

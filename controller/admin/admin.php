@@ -19,7 +19,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
             }
         } elseif ($_POST["func"] === "approval") {
             if (isset($_POST["index"])) {
-
+                $admin->updateCommentApproval($_POST["index"], $_POST["id"]);
             }
         }
 

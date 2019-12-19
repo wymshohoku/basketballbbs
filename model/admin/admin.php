@@ -42,6 +42,13 @@ namespace model\admin {
             }
             return $this->func->serialize();
         }
+        public function updateCommentApproval($index, $id)
+        {
+            $index = Util\DataVerify::test_input($index);
+            $id = Util\DataVerify::test_input($id);
+            
+            $this->func->updateCommentApproval($index, $id);
+        }
         public function deleteRecord($index, $id)
         {
             $index = Util\DataVerify::test_input($index);

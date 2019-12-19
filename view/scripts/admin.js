@@ -100,7 +100,7 @@ function callbackShowUsers(jsonUsers) {
         for (var index = 0; index < jsonUsers.count; index++) {
             var rownum = table.rows.length;
             var newRow = table.insertRow(rownum);
-            newRow.setAttribute("id", "id_"+ Number(index + 1));
+            newRow.setAttribute("id", "id_" + Number(index + 1));
             var cellindex = newRow.insertCell(0);
             cellindex.innerHTML = index + 1;
             var cellid = newRow.insertCell(1);
@@ -110,7 +110,7 @@ function callbackShowUsers(jsonUsers) {
             var cellimg = newRow.insertCell(3);
             cellimg.innerHTML = jsonUsers[index].img;
             var cellfunc = newRow.insertCell(4);
-            cellfunc.innerHTML = "<a href='#' onclick=\"deleteRecord('user#" + index + "&id=" + jsonUsers[index].id +"');\">删除</a>";
+            cellfunc.innerHTML = "<a href='#' onclick=\"deleteRecord('user#" + index + "&id=" + jsonUsers[index].id + "');\">删除</a>";
         }
         showUsers();
     } else {
@@ -124,7 +124,7 @@ function callbackShowArticles(jsonArticle) {
         for (var index = 0; index < jsonArticle.count; index++) {
             var rownum = table.rows.length;
             var newRow = table.insertRow(rownum);
-            newRow.setAttribute("id", "id_"+ Number(index + 1));
+            newRow.setAttribute("id", "id_" + Number(index + 1));
             var cellindex = newRow.insertCell(0);
             cellindex.innerHTML = index + 1;
             var cellid = newRow.insertCell(1);
@@ -134,7 +134,7 @@ function callbackShowArticles(jsonArticle) {
             var cellimg = newRow.insertCell(3);
             cellimg.innerHTML = jsonArticle.articles[index].text;
             var cellfunc = newRow.insertCell(4);
-            cellfunc.innerHTML = "<a href='#' onclick=\"deleteRecord('article#" + index + "&id=" + jsonArticle.articles[index].id +"');\">删除</a>";
+            cellfunc.innerHTML = "<a href='#' onclick=\"deleteRecord('article#" + index + "&id=" + jsonArticle.articles[index].id + "');\">删除</a>";
         }
         showArticles();
     }
@@ -146,7 +146,7 @@ function callbackShowComments(jsonComments) {
         for (var index = 0; index < jsonComments.count; index++) {
             var rownum = table.rows.length;
             var newRow = table.insertRow(rownum);
-            newRow.setAttribute("id", "id_"+ Number(index + 1));
+            newRow.setAttribute("id", "id_" + Number(index + 1));
             var cellindex = newRow.insertCell(0);
             cellindex.innerHTML = index + 1;
             var cellid = newRow.insertCell(1);
@@ -160,9 +160,9 @@ function callbackShowComments(jsonComments) {
             var celldate = newRow.insertCell(5);
             celldate.innerHTML = jsonComments[index].date;
             var cellfunc = newRow.insertCell(6);
-            var func = "<a href='#' onclick=\"deleteRecord('comment#" + index + "&id=" + jsonComments[index].id +"');\">删除</a>";
+            var func = "<a href='#' onclick=\"deleteRecord('comment#" + index + "&id=" + jsonComments[index].id + "');\">删除</a>";
             if (jsonComments[index].approval == 1) {
-                // func += "<a href='#' onclick=\"approvalRecord('comment#" + index + "&id=" + jsonComments[index].id +"');\">审核</a>";
+                func += "&nbsp<a href='#' onclick=\"approvalRecord('comment#" + index + "&id=" + jsonComments[index].id + "');\">审核</a>";
             }
             cellfunc.innerHTML = func;
         }
@@ -194,7 +194,7 @@ function approvalRecord(recordIndex) {
 }
 
 function callbackDeleteRecord(jsonResult) {
-    if(jsonResult !== null && jsonResult.result){
+    if (jsonResult !== null && jsonResult.result) {
         var table = document.querySelector("#" + jsonResult.name).querySelector("table");
         var i = Number(jsonResult.index) + 1;
         var row = table.querySelector("#id_" + i);
@@ -203,7 +203,15 @@ function callbackDeleteRecord(jsonResult) {
 }
 
 function callbackApprovalRecord(jsonResult) {
-    alert(jsonResult);
+    if (jsonResult !== null && jsonResult.result) {
+        var table = document.querySelector("#" + jsonResult.name).querySelector("table");
+        var i = Number(jsonResult.index) + 1;
+        var row = table.querySelector("#id_" + i);
+        var a = row.querySelectorAll("a")[1];
+        a.innerHTML = "已审核";
+        a.onclick = "";
+        //table.deleteRow(row.rowIndex);
+    }
 }
 
 function recordFunc(url, method, func, callback) {
