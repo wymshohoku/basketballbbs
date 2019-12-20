@@ -12,7 +12,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
         // 更新用户的token
         $_SESSION["admin"] = false;
         header('Content-Type:application/json; charset=utf-8');
-        $json = json_encode(array('location'=>'../../controller/admin/login.php'));
+        $json = json_encode(array('location'=>'/admin'));
         exit($json);
     }
     if (isset($_POST["src"]) && isset($_POST["func"])) {

@@ -1,7 +1,7 @@
 
-
 window.addEventListener("load", function () {
-	loadArticle("../../controller/index/bbs.php", "POST", callbackArticle);
+	//loadArticle("../../controller/index/bbs.php", "POST", callbackArticle);
+	pageClick(1);
 	// 提交表单数据，并验证数据的有效性，过滤字符串
 	var form = document.querySelector("#commentForm");
 	form.onsubmit = function (e) {
@@ -67,7 +67,7 @@ window.addEventListener("load", function () {
 							form.querySelector("#password").value = "";
 							form.querySelector("#userid").value = jsonComment.id;
 							form.querySelector("#token").value = jsonComment.token;
-							document.getElementById('captcha_img').src = art_id + '/r=' + Math.floor((Math.random() * 10000) + 1);
+							document.getElementById('captcha_img').src = art_id + '/r/' + Math.floor((Math.random() * 10000) + 1);
 						}
 					}
 				}
@@ -131,7 +131,7 @@ function callbackArticle(jsonArticle) {
 		showOrHideComments(0);
 	}
 	else {
-		setArticleTitleAndText(jsonArticle.art_id, jsonArticle.art_title, jsonArticle.art_text);
+		//setArticleTitleAndText(jsonArticle.art_id, jsonArticle.art_title, jsonArticle.art_text);
 
 		if (showOrHideComments(jsonArticle.comment_count)) {
 			var comment_count = document.querySelector(".comment_count");
@@ -234,6 +234,7 @@ function showOrHideComments(comment_count) {
 }
 
 function pageClick(page_index) {
+	var art_id = document.querySelector(".art_title").id;
 	var user_comment = document.querySelector(".user_comment");
 	if (user_comment.childNodes.length > 3) {// 第一个评论节点不删除
 		do {
@@ -243,7 +244,7 @@ function pageClick(page_index) {
 	var comment_1 = document.querySelector(".user_info");// 评论模板节点
 	comment_1.style.display = "none";
 
-	loadArticle("/page/" + page_index, "GET", callbackArticle);
+	loadArticle("./" + art_id + "/page/" + page_index, "GET", callbackArticle);
 }
 
 window.onload = function () {
@@ -281,7 +282,7 @@ function appendComment(comment_count, userimg, username, time, msg) {
 	commentNew.querySelector("#username").innerHTML = username;
 
 	var comment_floor = commentNew.querySelector("span");
-	comment_floor.innerHTML = comment_count + 1 + " 楼";
+	comment_floor.innerHTML = comment_count + " 楼";
 
 	var comment_time = commentNew.querySelector("time");
 	comment_time.innerHTML = new Date(time).Format('yy-MM-dd hh:mm:ss'); //"2018-11-15 17:40:00"

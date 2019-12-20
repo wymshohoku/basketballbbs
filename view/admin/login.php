@@ -11,6 +11,8 @@ use model\util as Util;
 $error = "登录";
 $admin = false;
 $token = getToken();
+$username = "";
+$password = "";
 //  启动会话，这步必不可少
 session_start();
 
@@ -45,7 +47,8 @@ if (Util\isAuthCode()) {
         && isset($_POST['username'])
         && isset($_POST['authcode'])
     ) {
-
+        $username = $_POST['username'];
+        $password = $_POST['password'];
         if ($_POST['authcode'] !== Util\getAuthCode()) {
             $error = "验证码错误！";
             //header('location:../../controller/admin/login.php');
@@ -79,11 +82,11 @@ if (Util\isAuthCode()) {
         } else {
             $error = "用户名或密码错误！";
         }
-    } else if ($_POST['username'] === "") {
+    } else if (isset($_POST['username']) && $_POST['username'] === "") {
         $error = "用户名不能为空！";
-    } else if ($_POST['password'] === "") {
+    } else if (isset($_POST['password']) && $_POST['password'] === "") {
         $error = "密码不能为空！";
-    } else if ($_POST['authcode'] === "") {
+    } else if (isset($_POST['authcode']) && $_POST['authcode'] === "") {
         $error = "验证码不能为空！";
     }
 
@@ -113,18 +116,19 @@ if (Util\isAuthCode()) {
                     <h2><?php echo $error; ?></h2>
                     <div>
                         <input type="hidden" id="userid" name="userid" value="" />
-                        <input type="hidden" id="token" name="token" value="<?php $_SESSION["token"] = $token; echo $token ?>" />
+                        <input type="hidden" id="token" name="token" value="<?php $_SESSION["token"] = $token;
+                                                                            echo $token ?>" />
                         <label for="username">用户名</label>
-                        <input type="text" name="username" placeholder="用户名" autocomplete="off" value="<?php echo $_POST["username"];?>" required>
+                        <input type="text" name="username" placeholder="用户名" autocomplete="off" value="<?php echo $username; ?>" required>
                     </div>
                     <div>
                         <label for="password">密码</label>
-                        <input type="password" name="password" id="password" placeholder="密码" autocomplete="off" value="<?php echo $_POST["password"];?>" required>
+                        <input type="password" name="password" id="password" placeholder="密码" autocomplete="off" value="<?php echo $password; ?>" required>
                     </div>
                     <div>
                         <label for="code">验证码图片：</label>
-                        <img id="captcha_img" border="1" src="login.php?r=<?php echo rand(); ?>" alt="" width="100" height="30" />
-                        <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='login.php?r='+Math.random() ">换一个?
+                        <img id="captcha_img" border="1" src="admin/r/<?php echo rand(); ?>" alt="" width="100" height="30" />
+                        <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='admin/r/'+Math.floor((Math.random()*10000)+1) ">换一个?
                         </a>
                     </div>
                     <div>

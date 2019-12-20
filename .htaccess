@@ -1,8 +1,9 @@
 RewriteRule index.(html|php)$ view/index/index.php
 RewriteRule ^admin$ view/admin/login.php
+RewriteRule ^admin/r/(\w+)$ view/admin/login.php?art_id=$1&r=$2
 RewriteRule ^styles/(\w+)\.css$ view/styles/$1.css
-RewriteRule ^images/(\w+)\.png$ view/images/$1.png
-RewriteRule ^images/(\w+)\.jpg$ view/images/$1.jpg
+RewriteRule ^images/((\w+)\.(png|jpg))$ view/images/$1
 RewriteRule ^scripts/(\w+)\.js$ view/scripts/$1.js
 RewriteRule ^articles/([0-9]+)$ view/index/bbs.php?art_id=$1
-RewriteRule ^articles/([0-9]+)/r=(\w+)$ view/index/bbs.php?art_id=$1&r=$2
+RewriteRule ^articles/([0-9]+)/r/(\w+)$ view/index/bbs.php?art_id=$1&r=$2
+RewriteRule ^articles/([0-9]+)/page/(\w+)$ view/index/bbs.php?art_id=$1&page_index=$2

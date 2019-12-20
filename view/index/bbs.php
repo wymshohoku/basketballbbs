@@ -16,8 +16,8 @@ if (CBbs::isAuthCode()) {
     exit();
 } else if (CBbs::isUserSubmitComment()) {
     $json = null;
+    $bbs = new CBbs();
     if (CBbs::checkToken($_POST['art_id'], $_POST['token'])) {
-        $bbs = new CBbs();
         // 验证提交评论的验证码
         if ($bbs->checkAuthCode($_POST['authcode'])) {
             // 提交评论
@@ -39,6 +39,10 @@ if (CBbs::isAuthCode()) {
     $bbs = new CBbs();
     if (CBbs::isUserClickPage()) { // 用户点击翻页
         $bbs->getArticle($_GET['page_index']);
+
+        header('Content-Type:application/json; charset=utf-8');
+        $json = json_encode($bbs->serialize());
+        exit($json);
     } else {
         CBbs::setArticleId($_GET['art_id']);
         // 用户点击了文章链接跳转，获取该文章和所有评论
@@ -61,7 +65,9 @@ if (CBbs::isAuthCode()) {
 </head>
 
 <body>
-    <script src="../scripts/bbs.js"></script>
+    <script src="../scripts/bbs.js">
+        json = <?php echo json_encode($json); ?>
+    </script>
     <header>
         <!-- 本站所有网页的统一主标题 -->
         <img src="../images/beachball.png" />
@@ -118,10 +124,10 @@ if (CBbs::isAuthCode()) {
                 <?php } ?>
             </div>
             <div id="comment-pages">
-                <div class="first" id="home">首页</div>
+                <div class="first" id="home" onclick="pageClick(1)">首页</div>
                 <div class="first" id="prev">上一页</div>
                 <div id="page_number">
-                    <h2><?php echo $json['comment_page_index']; ?></ h2>
+                    <!-- <h2><?php echo $json['comment_page_index']; ?></ h2> -->
                 </div>
                 <div class="first" id="next">下一页</div>
                 <div class="first" id="last">尾页</div>
@@ -143,12 +149,12 @@ if (CBbs::isAuthCode()) {
                 </div>
                 <div>
                     <label for="msg">留言内容：</label>
-                    <textarea id="msg" name="msg" onfocus="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r='+Math.floor((Math.random()*10000)+1); " required></textarea>
+                    <textarea id="msg" name="msg" onfocus="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r/'+Math.floor((Math.random()*10000)+1); " required></textarea>
                 </div>
                 <div>
                     <label for="code">验证码图片：</label>
-                    <img id="captcha_img" border="1" src="<?php echo $json['art_id'] ?>/r=<?php echo rand(); ?>" alt="" width="100" height="30" />
-                    <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r='+Math.floor((Math.random()*10000)+1); ">换一个?
+                    <img id="captcha_img" border="1" src="<?php echo $json['art_id'] ?>/r/<?php echo rand(); ?>" alt="" width="100" height="30" />
+                    <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r/'+Math.floor((Math.random()*10000)+1); ">换一个?
                     </a>
                 </div>
                 <div>
