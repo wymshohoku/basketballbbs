@@ -34,7 +34,7 @@ myButton.onclick = function () {
  */
 
 window.addEventListener("load", function () {
-    loadArticle("../../controller/index/index.php", callbackArticle);
+    loadArticle("index/", callbackArticle);
 });
 
 function loadArticle(url, callback) {
@@ -59,8 +59,8 @@ function addArticle(articles_count, jsonArticles) {
         li_article.appendChild(a_article);
 
         // 设置链接
-        a_article.href = "../../controller/index/bbs.php?art_id=" + article_index +
-            "&token=" + jsonArticles[article_index - 1].token;
+        a_article.href = "articles/" + article_index +
+            "?token=" + jsonArticles[article_index - 1].token;
 
         a_article.innerHTML =
             jsonArticles[article_index - 1].title;

@@ -35,10 +35,11 @@ namespace model\article {
         }
         public function serialize()
         {
+            $token = $this->getToken($this->art_id);
             if ($this->bAllRecord || $this->bError) {
+                $this->records['token'] = $token;
                 return $this->records;
             }
-            $token = $this->getToken($this->art_id);
 
             $this->article_json['token'] = $token;
             $this->article_json['haserror'] = false;

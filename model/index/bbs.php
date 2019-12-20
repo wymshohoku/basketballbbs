@@ -128,7 +128,9 @@ namespace model\index {
                 return true;
             }
             $this->berror = true;
+            
             $this->msg['haserror'] = true;
+            $this->msg['token'] = $this->art->getToken($_SESSION['art_id']);
             $this->msg['error'][] = '验证码不正确，请重新输入！';
             return false;
         }
@@ -136,6 +138,7 @@ namespace model\index {
         {
             $this->berror = true;
             $this->msg['haserror'] = true;
+            $this->msg['token'] = $this->art->getToken($_SESSION['art_id']);
             $this->msg['error'][] = '文章ID错误！';
             $art_id = test_input($art_id);
             // 提交的评论的文章id是否是当前访问的文章id

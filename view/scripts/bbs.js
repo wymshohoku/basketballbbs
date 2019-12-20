@@ -29,7 +29,7 @@ window.addEventListener("load", function () {
 				"&authcode=" + code + "&time=" + comment_time + "&token=" + token;
 
 			let xhr = new XMLHttpRequest();
-			xhr.open("POST", "../../controller/index/bbs.php");
+			xhr.open("POST", "./" + art_id);
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.responseType = "json";
 
@@ -67,7 +67,7 @@ window.addEventListener("load", function () {
 							form.querySelector("#password").value = "";
 							form.querySelector("#userid").value = jsonComment.id;
 							form.querySelector("#token").value = jsonComment.token;
-							document.getElementById('captcha_img').src = '../../controller/index/bbs.php?r=' + Math.random();
+							document.getElementById('captcha_img').src = art_id + '/r=' + Math.floor((Math.random() * 10000) + 1);
 						}
 					}
 				}
@@ -243,7 +243,7 @@ function pageClick(page_index) {
 	var comment_1 = document.querySelector(".user_info");// 评论模板节点
 	comment_1.style.display = "none";
 
-	loadArticle("../../controller/index/bbs.php?page_index=" + page_index, "GET", callbackArticle);
+	loadArticle("/page/" + page_index, "GET", callbackArticle);
 }
 
 window.onload = function () {
