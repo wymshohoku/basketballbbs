@@ -59,4 +59,12 @@ namespace model\util {
     {
         return $_SESSION['authcode'];
     }
+    
+    function isAuthCode()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['r'])) {
+            return true;
+        }
+        return false;
+    }
 }

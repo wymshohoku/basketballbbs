@@ -6,7 +6,6 @@ namespace model\user {
     require_once '../../model/common/token.php';
 
     use model\mysql\Pdo;
-    use model\common\Token;
     use model\util as Util;
 
     class user
@@ -120,7 +119,7 @@ namespace model\user {
         }
         public function createToken($id, $name, $passwd)
         {
-            $token = new Token();
+            $token = new Util\Token();
             $expireTime = new \DateTime(date('Y-m-d H:i:s', time()));
             date_add($expireTime, date_interval_create_from_date_string("10 minutes"));
             $expireTime = $expireTime->format('Y-m-d H:i:s');

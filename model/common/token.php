@@ -1,6 +1,6 @@
 <?php
 
-namespace model\common {
+namespace model\util {
 
     require_once '../../model/mysql/mysql.php';
 

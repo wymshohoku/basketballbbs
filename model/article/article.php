@@ -7,7 +7,7 @@ namespace model\article {
 
     use model\comment\comment;
     use model\mysql\Pdo;
-    use model\common\Token;
+    use model\util\Token;
 
     \define('COMMENT_PAGE_COUNT', 5);
     \define('ARTICLE_TABLE_NAME', 'article');

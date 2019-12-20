@@ -7,8 +7,14 @@ session_start();
 
 //  判断是否登陆
 if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
-
     $json = "";
+    if(isset($_POST["LoginOut"])){
+        // 更新用户的token
+        $_SESSION["admin"] = false;
+        header('Content-Type:application/json; charset=utf-8');
+        $json = json_encode(array('location'=>'../../controller/admin/login.php'));
+        exit($json);
+    }
     if (isset($_POST["src"]) && isset($_POST["func"])) {
         $admin = new Admin($_POST["src"]);
         if ($_POST["func"] === "select_all") {

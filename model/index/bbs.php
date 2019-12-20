@@ -2,8 +2,8 @@
 
 namespace model\index {
     require_once '../../model/common/util.php';
-    require_once '../../model/article/article.php';
     require_once '../../model/common/captcha.php';
+    require_once '../../model/article/article.php';
 
     use model\article\article;
     use model\util as Util;
@@ -104,15 +104,13 @@ namespace model\index {
 
         public static function isAuthCode()
         {
-            if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['r'])) {
-                return true;
-            }
-            return false;
+            return Util\isAuthCode();
         }
         public static function getAuthCodeImg()
         {
-            Util\getAuthCodeImg();
+            return Util\getAuthCodeImg();
         }
+
         public static function isUserSubmitComment()
         {
             if (

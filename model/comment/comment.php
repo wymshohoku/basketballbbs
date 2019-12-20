@@ -37,7 +37,7 @@ namespace model\comment {
             $this->user = new user($name, 'img');
             $this->datetime = $datetime;
             $this->msg = $msg;
-            $this->approval = 2; // 0，已删除 1，未审核 2，已审核
+            $this->approval = 1; // 0，已删除 1，未审核 2，已审核
         }
 
         public function __construct5($id, $userid, $datetime, $msg, $approval)
@@ -192,7 +192,7 @@ namespace model\comment {
                 // 插入新的评论到数据库
                 $pdo = new Pdo();
                 //$sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES('" . $this->articleid . "','" . $userid . "','" . $this->msg . "','" . $this->datetime . "','2')";
-                $sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES(?, ?, ?, ?, '2')";
+                $sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES(?, ?, ?, ?, '1')";
                 //$sql = "INSERT INTO comments (articleid, userid, comment, date, approval) VALUES('1','2','11111','2019-12-02 18:09:09','2')";
                 try {
                     $stmt = $pdo->prepareSQL($sql, array($this->articleid, $userid, $this->msg, $this->datetime));

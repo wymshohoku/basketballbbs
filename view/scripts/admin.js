@@ -114,7 +114,7 @@ function callbackShowUsers(jsonUsers) {
         }
         showUsers();
     } else {
-        window.location.href = "../../view/admin/login.html";
+        window.location.href = "../../controller/admin/login.php";
     }
 }
 function callbackShowArticles(jsonArticle) {
@@ -226,5 +226,23 @@ function recordFunc(url, method, func, callback) {
     };
 
     var data = "src=" + func;
+    xhr.send(data);
+}
+
+function onLoginOut() {
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "../../controller/admin/admin.php");
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.responseType = "json";
+    var data = "LoginOut=true";
+
+    xhr.onload = function () {
+        if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {
+            json = xhr.response;
+            if (json != null) {
+                window.location.href = json.location;
+            }
+        }
+    };
     xhr.send(data);
 }
