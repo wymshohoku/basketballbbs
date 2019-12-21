@@ -12,7 +12,7 @@ namespace model\user {
     {
         private $id;
         private $username;
-        private $userimg = '../../view/images/touxiang.webp';
+        private $userimg = '//upload.jianshu.io/users/upload_avatars/2571348/ca2d531d-05db-4172-817d-582436cf6ea1.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/80/h/80/format/webp';
         private $bAllRecord;
         private $records;
         private $bError;

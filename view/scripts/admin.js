@@ -69,13 +69,13 @@ window.addEventListener("load", function () {
 
 function onChangeArticle(index) {
     if (index == 1) {
-        loadTable("../../view/admin/admin.php", "POST", "user", callbackShowUsers);
+        loadTable("", "POST", "user", callbackShowUsers);
     } else if (index == 2) {
-        loadTable("../../view/admin/admin.php", "POST", "article", callbackShowArticles);
+        loadTable("", "POST", "article", callbackShowArticles);
     } else if (index == 3) {
-        loadTable("../../view/admin/admin.php", "POST", "comment", callbackShowComments);
+        loadTable("", "POST", "comment", callbackShowComments);
     } else if (index == 4) {
-        loadTable("../../view/admin/admin.php", "POST", "my", callbackShowMy);
+        loadTable("", "POST", "my", callbackShowMy);
     }
 }
 function loadTable(url, method, func, callback) {
@@ -114,7 +114,7 @@ function callbackShowUsers(jsonUsers) {
         }
         showUsers();
     } else {
-        window.location.href = "admin";
+        window.location.href = "";
     }
 }
 function callbackShowArticles(jsonArticle) {
@@ -184,13 +184,13 @@ function deleteTableElement(table) {
 function deleteRecord(recordIndex) {
     recordIndex = recordIndex.replace("#", "&index=");
     recordIndex += "&func=delete";
-    recordFunc("../../view/admin/admin.php", "POST", recordIndex, callbackDeleteRecord);
+    recordFunc("", "POST", recordIndex, callbackDeleteRecord);
 }
 
 function approvalRecord(recordIndex) {
     recordIndex = recordIndex.replace("#", "&index=");
     recordIndex += "&func=approval";
-    recordFunc("../../view/admin/admin.php", "POST", recordIndex, callbackApprovalRecord);
+    recordFunc("", "POST", recordIndex, callbackApprovalRecord);
 }
 
 function callbackDeleteRecord(jsonResult) {
@@ -231,7 +231,7 @@ function recordFunc(url, method, func, callback) {
 
 function onLoginOut() {
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "../../view/admin/admin.php");
+    xhr.open("POST", "");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.responseType = "json";
     var data = "LoginOut=true";

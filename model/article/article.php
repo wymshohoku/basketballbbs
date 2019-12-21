@@ -28,8 +28,9 @@ namespace model\article {
         private $comment_array = array();
         private $article_json;
 
-        public function __construct()
+        public function __construct($id)
         {
+            $this->art_id = $id;
             $this->bError = false;
             $this->bAllRecord = false;
         }
@@ -67,7 +68,13 @@ namespace model\article {
         {
             $t = new Token();
             $secret = $this->getSecret($id);
-            return $t->check_api_token($id, $secret, $token);
+            $ret = $t->check_api_token($id, $secret, $token);
+            if($ret === false){
+                $this->bError = true;
+                $this->records["error"][] = "未登录，或登陆失败！请重新登录。";
+                $this->records["haserror"] = true;
+            }
+            return $ret;
         }
         public function getSecret($id)
         {

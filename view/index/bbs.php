@@ -8,16 +8,13 @@ use model\comment\comment;
 use model\index\bbs as CBbs;
 
 if (CBbs::isAuthCode()) {
+    // 生成验证码图片
     CBbs::getAuthCodeImg();
     exit();
-} else if (CBbs::isStoreArticleId() && isset($_GET['token'])) {
-    if (CBbs::checkToken($_GET['art_id'], $_GET['token'])) {
-    }
-    exit();
-} else if (CBbs::isUserSubmitComment()) {
+} elseif (CBbs::isUserSubmitComment()) {
     $json = null;
     $bbs = new CBbs();
-    if (CBbs::checkToken($_POST['art_id'], $_POST['token'])) {
+    if ($bbs->checkToken($_POST['art_id'], $_POST['token'])) {
         // 验证提交评论的验证码
         if ($bbs->checkAuthCode($_POST['authcode'])) {
             // 提交评论
@@ -35,7 +32,11 @@ if (CBbs::isAuthCode()) {
     header('Content-Type:application/json; charset=utf-8');
     $json = json_encode($bbs->serialize());
     exit($json);
-} else if (CBbs::isUserClickArticle()) { // 用户点击文章链接
+} elseif (CBbs::isStoreArticleId() && isset($_GET['token'])) {
+    if (CBbs::checkToken($_GET['art_id'], $_GET['token'])) {
+    }
+    exit(); 
+}elseif (CBbs::isUserClickArticle()) { // 用户点击文章链接
     $bbs = new CBbs();
     if (CBbs::isUserClickPage()) { // 用户点击翻页
         $bbs->getArticle($_GET['page_index']);
@@ -58,27 +59,25 @@ if (CBbs::isAuthCode()) {
 
 <head>
     <meta charset="utf-8" />
-    <link href="../styles/normalize.css" rel="stylesheet" type="text/css" />
-    <link href="../styles/bbs.css" rel="stylesheet" type="text/css" />
+    <link href="styles/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="styles/bbs.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.font.im/css?family=Open+Sans" rel="stylesheet" type="text/css" />
     <title>篮球世界</title>
 </head>
 
 <body>
-    <script src="../scripts/bbs.js">
-        json = <?php echo json_encode($json); ?>
-    </script>
+    <script src="scripts/bbs.js"></script>
     <header>
         <!-- 本站所有网页的统一主标题 -->
-        <img src="../images/beachball.png" />
+        <img src="images/beachball.png" />
         <h1 class="siteWorld">欢迎来到<strong>篮球世界</strong></h1>
-        <img src="../images/beachball.png" />
+        <img src="images/beachball.png" />
     </header>
 
     <nav>
         <!-- 本站所有网页的统一主标题 -->
         <ul class="menu-list">
-            <li><a href="../">主页</a></li>
+            <li><a href="/">主页</a></li>
             <!-- <li><a href="#">留言板</a></li> -->
             <!-- 共n个导航栏项目，省略…… -->
         </ul>
@@ -124,7 +123,7 @@ if (CBbs::isAuthCode()) {
                 <?php } ?>
             </div>
             <div id="comment-pages">
-                <div class="first" id="home" onclick="pageClick(1)">首页</div>
+                <div class="first" id="home">首页</div>
                 <div class="first" id="prev">上一页</div>
                 <div id="page_number">
                     <!-- <h2><?php echo $json['comment_page_index']; ?></ h2> -->
@@ -149,12 +148,12 @@ if (CBbs::isAuthCode()) {
                 </div>
                 <div>
                     <label for="msg">留言内容：</label>
-                    <textarea id="msg" name="msg" onfocus="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r/'+Math.floor((Math.random()*10000)+1); " required></textarea>
+                    <textarea id="msg" name="msg" onfocus="document.getElementById('captcha_img').src='r/'+Math.floor((Math.random()*10000)+1); " required></textarea>
                 </div>
                 <div>
                     <label for="code">验证码图片：</label>
-                    <img id="captcha_img" border="1" src="<?php echo $json['art_id'] ?>/r/<?php echo rand(); ?>" alt="" width="100" height="30" />
-                    <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='<?php echo $json['art_id'] ?>/r/'+Math.floor((Math.random()*10000)+1); ">换一个?
+                    <img id="captcha_img" border="1" src="r/<?php echo rand(); ?>" alt="" width="100" height="30" />
+                    <a href="javascript:void(0)" onclick="document.getElementById('captcha_img').src='r/'+Math.floor((Math.random()*10000)+1); ">换一个?
                     </a>
                 </div>
                 <div>

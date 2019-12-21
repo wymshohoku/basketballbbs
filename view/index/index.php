@@ -4,6 +4,9 @@ require_once '../../model/article/article.php';
 
 use model\article\article;
 
+/**
+ * 返回文章列表
+ */
 $art = new article();
 $art->getTable();
 $articles_json = $art->serialize();
@@ -53,7 +56,7 @@ $articles_json = $art->serialize();
             <p>篮球世界是一个全球社区，这里聚集着来自五湖四海的</p>
             <ul id="art_list">
                 <?php foreach ($articles_json['articles'] as $article) { ?>
-                    <li><a href="<?php echo 'articles/' . $article['id']; ?>"><?php echo $article['title']; ?></a></li>
+                    <li><a href="<?php echo 'articles/' . $article['id']; ?>/"><?php echo $article['title']; ?></a></li>
                 <?php } ?>
             </ul>
             <p>我们致力于……</p>
@@ -65,7 +68,7 @@ $articles_json = $art->serialize();
 
         <aside>
             <!-- 侧边栏在主内容右侧 -->
-            <h2><a href="admin">登录后台</a></h2>
+            <h2><a href="login/">登录后台</a></h2>
             <ul>
                 <!-- 侧边栏有n个超链接，略略略…… -->
             </ul>

@@ -16,11 +16,41 @@ namespace model\admin {
 
     class Admin
     {
+        /**
+         * 操作对象
+         *
+         * @var [object]
+         */
         private $func;
+
+        /**
+         * 操作对象名称
+         *
+         * @var [string]
+         */
         private $func_name;
+
+        /**
+         * 存储所有记录结果
+         *
+         * @var [array]
+         */
         private $records;
+
+        /**
+         * 是否返回所有记录
+         *
+         * @var [bool]
+         */
         private $bAllRecord;
 
+        /**
+         * 构造函数，通过参数传递操作对象名，构造对应的操作对象
+         *
+         * @param  mixed $func 操作对象名
+         *
+         * @return void
+         */
         public function __construct($func)
         {
             $this->bAllRecord = false;
@@ -35,6 +65,12 @@ namespace model\admin {
                 $this->func = $this;
             }
         }
+        
+        /**
+         * 序列化
+         *
+         * @return false或array
+         */
         public function serialize()
         {
             if ($this->bAllRecord) {
@@ -42,6 +78,15 @@ namespace model\admin {
             }
             return $this->func->serialize();
         }
+
+        /**
+         * 更新留言的审核状态
+         *
+         * @param  mixed $index 记录显示的索引
+         * @param  mixed $id 记录在数据库中的ID
+         *
+         * @return void
+         */
         public function updateCommentApproval($index, $id)
         {
             $index = Util\DataVerify::test_input($index);
@@ -49,6 +94,15 @@ namespace model\admin {
             
             $this->func->updateCommentApproval($index, $id);
         }
+
+        /**
+         * 删除记录
+         *
+         * @param  mixed $index 记录显示的索引
+         * @param  mixed $id 记录在数据库中的ID
+         *
+         * @return void
+         */
         public function deleteRecord($index, $id)
         {
             $index = Util\DataVerify::test_input($index);
@@ -74,6 +128,12 @@ namespace model\admin {
             }
             $this->func->deleteRecord($index, $id);
         }
+        
+        /**
+         * 获取所有操作对象的记录
+         *
+         * @return bool
+         */
         public function getTable()
         {
             if ($this->func === $this) {

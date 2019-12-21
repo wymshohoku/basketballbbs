@@ -1,6 +1,5 @@
 
 window.addEventListener("load", function () {
-	//loadArticle("../../controller/index/bbs.php", "POST", callbackArticle);
 	pageClick(1);
 	// 提交表单数据，并验证数据的有效性，过滤字符串
 	var form = document.querySelector("#commentForm");
@@ -25,11 +24,18 @@ window.addEventListener("load", function () {
 			form.querySelector("#wd").style.display = "inline";
 			form.querySelector("#password").type = "password";
 		} else {
-			var data = "art_id=" + art_id + "&id=" + user_id + "&username=" + name + "&pwd=" + passwd + "&msg=" + msg +
-				"&authcode=" + code + "&time=" + comment_time + "&token=" + token;
+			var data = "submit=true" +
+				"&art_id=" + art_id +
+				"&id=" + user_id +
+				"&username=" + name +
+				"&pwd=" + passwd +
+				"&msg=" + msg +
+				"&authcode=" + code +
+				"&time=" + comment_time +
+				"&token=" + token;
 
 			let xhr = new XMLHttpRequest();
-			xhr.open("POST", "./" + art_id);
+			xhr.open("POST", "#");
 			xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 			xhr.responseType = "json";
 
@@ -241,14 +247,10 @@ function pageClick(page_index) {
 			user_comment.removeChild(user_comment.lastChild);
 		} while (user_comment.childNodes.length > 3);
 	}
-	var comment_1 = document.querySelector(".user_info");// 评论模板节点
-	comment_1.style.display = "none";
+	//var comment_1 = document.querySelector(".user_info");// 评论模板节点
+	//comment_1.style.display = "none";
 
-	loadArticle("./" + art_id + "/page/" + page_index, "GET", callbackArticle);
-}
-
-window.onload = function () {
-	//loadArticle("../../controller/index/bbs.php", "POST", callbackArticle);
+	loadArticle("page/" + page_index + "/", "GET", callbackArticle);
 }
 
 Date.prototype.Format = function (fmt) {

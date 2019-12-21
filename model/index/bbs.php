@@ -21,13 +21,12 @@ namespace model\index {
 
         public static function getArticleToken($art_id)
         {
-            $art = new article();
+            $art = new article(self::getArticleId());
             $secret = $art->getSecret(test_input($art_id));
         }
-        public static function checkToken($art_id, $token)
+        public function checkToken($art_id, $token)
         {
-            $art = new article();
-            return $art->checkToken(test_input($art_id), $token);
+            return $this->art->checkToken(test_input($art_id), $token);
         }
         public function serialize()
         {
@@ -39,7 +38,7 @@ namespace model\index {
         public function __construct()
         {
             $this->berror = false;
-            $this->art = new article();
+            $this->art = new article(self::getArticleId());
         }
         public static function setArticleId($id)
         {
@@ -84,7 +83,7 @@ namespace model\index {
                 return $_SESSION['art_id'];
             }
 
-            return false;
+            return 0;
         }
 
         public static function isUserClickPage()
@@ -115,7 +114,9 @@ namespace model\index {
         {
             if (
                 $_SERVER['REQUEST_METHOD'] === 'POST'
-                && !empty($_POST) && isset($_POST['art_id'])
+                && !empty($_POST) 
+                && isset($_POST['submit'])
+                && $_POST['submit'] == true
             ) {
                 return true;
             }
@@ -128,7 +129,7 @@ namespace model\index {
                 return true;
             }
             $this->berror = true;
-            
+
             $this->msg['haserror'] = true;
             $this->msg['token'] = $this->art->getToken($_SESSION['art_id']);
             $this->msg['error'][] = '验证码不正确，请重新输入！';

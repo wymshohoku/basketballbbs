@@ -16,22 +16,38 @@ $password = "";
 //  启动会话，这步必不可少
 session_start();
 
+/**
+ * 过滤信息
+ *
+ * @param  mixed $data 需要过滤的字符串
+ *
+ * @return string
+ */
 function test_input($data)
 {
     return Util\DataVerify::test_input($data);
 }
+
+/**
+ * 生成token
+ *
+ * @return string
+ */
 function getToken()
 {
     $t = new Util\Token();
     return $t->api_token("login", date("Y-m-d H:i:s", time()));
 }
+
+
 if (Util\isAuthCode()) {
+    // 生成验证码图片
     $image = Util\getAuthCodeImg();
     header('content-type:image/png');
     exit($image);
 } else if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
     //  判断是否登陆
-    header('location:../../view/admin/admin.html');
+    header('location:/admin/');
     exit();
     // header('Content-Type:application/json; charset=utf-8');
     // $loc['location'] = '/view/admin/admin.html';
@@ -41,6 +57,7 @@ if (Util\isAuthCode()) {
     //  验证失败，将 $_SESSION["admin"] 置为 false
     $_SESSION["admin"] = false;
 
+    // 验证用户
     if (
         $_SERVER['REQUEST_METHOD'] === 'POST'
         && !empty($_POST)
@@ -73,7 +90,7 @@ if (Util\isAuthCode()) {
 
                     if ($isLogin) {
                         $_SESSION["admin"] = true;
-                        header('location:../../view/admin/admin.html');
+                        header('location:/admin/');
                         exit();
                     }
                 }
