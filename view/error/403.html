@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <title>404 错误 - phpstudy</title>
+  <title>403 错误 - phpstudy</title>
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="renderer" content="webkit">
@@ -30,7 +30,7 @@
      
     }
     .content >div{
-      margin-top: 50px;
+      margin-top: 200px;
       padding: 20px;
       background: #d9edf7;  
       border-radius: 12px;
@@ -48,24 +48,15 @@
 <body>
   <div class="content">
       <div>
-           <h1>404 - Page Not Found 未找到</h1>
+           <h1>403 - Forbidden 禁止访问: 访问被拒绝</h1>
         <dl>
-          <dt>错误说明：请求的页面不存在</dt>
-          <dt>原因1：访问的文档权限不够</dt>
+          <dt>错误说明：禁止访问，服务器拒绝访问</dt>
+          <dt>原因1：未找到默认的索引文件</dt>
 		  <dd>解决办法：</dd>
-          <dd>修改文件权限为755，windos系统修改目录权限为可写可读。</dd>
-          <dt>原因2：防火墙的原因</dt>
+          <dd>IIS中【启用默认内容文档】选项中将默认打开文档修改为程序首页文件格式，如：index.html或者index.php</dd>
+          <dt>原因2：文件夹安全权限导致</dt>
 		  <dd>解决办法：</dd>
-          <dd>先关闭让防火墙通过WWW服务。</dd>
-		  <dt>原因3：站点根目录无默认访问文件</dt>
-		  <dd>解决办法：</dd>
-          <dd>在根目录中创建index.html或者创建index.php。</dd>
-		  <dt>原因4：站点配置目录不正确</dt>
-		  <dd>解决办法：</dd>
-          <dd>将网站应用程序复制到站点目录中，或者修改站点配置目录指定到应用程序目录中。</dd>
-		  <dt>原因5：站点使用了伪静态</dt>
-		  <dd>解决办法：</dd>
-          <dd>将伪静态规则删除，或者重新编写正确的伪静态规则，或关闭伪静态配置。</dd>
+          <dd>程序文件-右击-属性-安全-Users-修改为读取和执行权限</dd>
         </dl>
         <div>使用手册，视频教程，BUG反馈，官网地址： <a href="https://www.xp.cn"  target="_blank">www.xp.cn</a> </div>
     

@@ -9,31 +9,145 @@ namespace model\article {
     use model\mysql\Pdo;
     use model\util\Token;
 
+    /**
+     * 没有最多显示的评论数
+     */
     \define('COMMENT_PAGE_COUNT', 5);
+
+    /**
+     * 数据库文章存放表的名称
+     */
     \define('ARTICLE_TABLE_NAME', 'article');
 
     class article
     {
+        /**
+         * 文章ID
+         *
+         * @var int
+         */
         private $art_id;
-        private $art_title;
-        private $art_text;
-        private $records;
-        private $bAllRecord;
-        private $bError;
-        private $comment_current_page_count = 0;
-        private $comment_pre_paga_count = COMMENT_PAGE_COUNT; // 每一页评论的数量;
-        private $comment_page_index = 0;
-        private $comment_pages = 0; // 总共的评论页数
-        private $comment_count = 0; // 总共的评论
-        private $comment_array = array();
-        private $article_json;
 
-        public function __construct($id)
+        /**
+         * 文章标题
+         *
+         * @var string
+         */
+        private $art_title;
+
+        /**
+         * 文章内容
+         *
+         * @var string
+         */
+        private $art_text;
+
+        /**
+         * 存储所有记录
+         *
+         * @var array
+         */
+        private $records;
+
+        /**
+         * 是否返回所有记录
+         *
+         * @var bool
+         */
+        private $bAllRecord;
+
+        /**
+         * 是否有错误
+         *
+         * @var bool
+         */
+        private $bError;
+
+        /**
+         * 当前分页的评论数
+         *
+         * @var integer
+         */
+        private $comment_current_page_count = 0;
+
+        /**
+         * 每一页最多显示的评论数
+         *
+         * @var integer
+         */
+        private $comment_pre_paga_count = COMMENT_PAGE_COUNT; // 每一页评论的数量;
+        
+        /**
+         * 当前分页的索引
+         *
+         * @var integer
+         */
+        private $comment_page_index = 0;
+
+        /**
+         * 总共的分页数量
+         *
+         * @var integer
+         */
+        private $comment_pages = 0; 
+
+        /**
+         * 总共的评论数量
+         *
+         * @var integer
+         */
+        private $comment_count = 0;
+
+        /**
+         * 存放当前文章当前页的评论内容
+         *
+         * @var array
+         */
+        private $comment_array = array();
+
+        /*******************************************************************/
+        
+        /**
+         * 构造函数重载调用
+         *
+         * @return void
+         */
+        public function __construct()
         {
-            $this->art_id = $id;
             $this->bError = false;
             $this->bAllRecord = false;
+            $a = func_get_args();
+            $i = count($a);
+            if (method_exists($this, $f = '__construct' . $i)) {
+                call_user_func_array(array($this, $f), $a);
+            }
         }
+        
+        /**
+         * 构造函数
+         *
+         * @return void
+         */
+        public function __construct0()
+        {
+        }
+
+        /**
+         * 构造函数
+         *
+         * @param  mixed $id 文章ID
+         *
+         * @return void
+         */
+        public function __construct1($id)
+        {
+            $this->art_id = $id;
+        }
+        /**
+         * 序列化输出
+         *
+         * @return array 返回结果数组
+         */
         public function serialize()
         {
             $token = $this->getToken($this->art_id);
@@ -42,19 +156,28 @@ namespace model\article {
                 return $this->records;
             }
 
-            $this->article_json['token'] = $token;
-            $this->article_json['haserror'] = false;
-            $this->article_json['art_id'] = $this->art_id;
-            $this->article_json['art_title'] = $this->art_title;
-            $this->article_json['art_text'] = $this->art_text;
-            $this->article_json['comment_current_page_count'] = $this->comment_current_page_count;
-            $this->article_json['comment_pre_paga_count'] = $this->comment_pre_paga_count;
-            $this->article_json['comment_page_index'] = $this->comment_page_index;
-            $this->article_json['comment_pages'] = $this->comment_pages;
-            $this->article_json['comment_count'] = $this->comment_count;
-            $this->article_json['comments'] = $this->comment_array;
-            return $this->article_json;
+            $article_comments['token'] = $token;
+            $article_comments['haserror'] = false;
+            $article_comments['art_id'] = $this->art_id;
+            $article_comments['art_title'] = $this->art_title;
+            $article_comments['art_text'] = $this->art_text;
+            $article_comments['comment_current_page_count'] = $this->comment_current_page_count;
+            $article_comments['comment_pre_paga_count'] = $this->comment_pre_paga_count;
+            $article_comments['comment_page_index'] = $this->comment_page_index;
+            $article_comments['comment_pages'] = $this->comment_pages;
+            $article_comments['comment_count'] = $this->comment_count;
+            $article_comments['comments'] = $this->comment_array;
+            return $article_comments;
         }
+        
+        /**
+         * 获取token
+         *
+         * @param  mixed $id 文章ID
+         * @param  mixed $secret 密钥
+         *
+         * @return void
+         */
         public function getToken($id, $secret = "")
         {
             $t = new Token();
@@ -64,6 +187,15 @@ namespace model\article {
             $token = $t->api_token($id, $secret);
             return $token;
         }
+        
+        /**
+         * 检查token
+         *
+         * @param  mixed $id 文章ID
+         * @param  mixed $token 检验的token
+         *
+         * @return void
+         */
         public function checkToken($id, $token)
         {
             $t = new Token();
@@ -76,6 +208,15 @@ namespace model\article {
             }
             return $ret;
         }
+
+        
+        /**
+         * 获取密钥
+         *
+         * @param  mixed $id 文章ID
+         *
+         * @return void
+         */
         public function getSecret($id)
         {
             $pdo = new Pdo();
@@ -88,6 +229,15 @@ namespace model\article {
             $row = $stmt->fetch();
             return $row[0];
         }
+        
+        /**
+         * 删除记录
+         *
+         * @param  mixed $index 记录显示的索引
+         * @param  mixed $id 记录的ID
+         *
+         * @return void
+         */
         public function deleteRecord($index, $id)
         {
             $this->bAllRecord = true;
@@ -105,6 +255,12 @@ namespace model\article {
             $this->records["name"] = "article";
             return true;
         }
+
+        /**
+         * 获取记录列表
+         *
+         * @return bool
+         */
         public function getTable()
         {
             $this->bAllRecord = true;
@@ -131,6 +287,15 @@ namespace model\article {
             $this->records["count"] = $index;
             return true;
         }
+        
+        /**
+         * 通过ID和分页索引获取文章记录
+         *
+         * @param  mixed $artid 文章ID
+         * @param  mixed $comment_current_page_index 当前分页索引
+         *
+         * @return void
+         */
         public function getRecordById($artid, $comment_current_page_index)
         {
             $pdo = new Pdo();
@@ -165,10 +330,20 @@ namespace model\article {
 
             return $this->comment_page_index;
         }
-        public function insertRecord()
-        {
-        }
-
+        
+        /**
+         * 插入评论
+         *
+         * @param  mixed $artid 文章ID
+         * @param  mixed $name 评论用户名
+         * @param  mixed $msg 评论内容
+         * @param  mixed $datetime 评论日期
+         * @param  mixed $userid 用户ID
+         * @param  mixed $pwd 用户密码
+         * @param  mixed $token 令牌
+         *
+         * @return void
+         */
         public function insertComment($artid, $name, $msg, $datetime, $userid, $pwd, $token)
         {
             $comment = new comment($artid, $name, $msg, $datetime, $userid, '2');

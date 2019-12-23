@@ -10,14 +10,60 @@ namespace model\user {
 
     class user
     {
+        /**
+         * 用户ID
+         *
+         * @var integer
+         */
         private $id;
+
+        /**
+         * 用户名
+         *
+         * @var string
+         */
         private $username;
+
+        /**
+         * 用户头像
+         *
+         * @var string
+         */
         private $userimg = '//upload.jianshu.io/users/upload_avatars/2571348/ca2d531d-05db-4172-817d-582436cf6ea1.jpg?imageMogr2/auto-orient/strip|imageView2/1/w/80/h/80/format/webp';
+        
+        /**
+         * 是否获取所有用户信息
+         *
+         * @var bool
+         */
         private $bAllRecord;
+
+        /**
+         * 存放所有用户信息
+         *
+         * @var array
+         */
         private $records;
+
+        /**
+         * 是否有错误
+         *
+         * @var bool
+         */
         private $bError;
+
+        /**
+         * 错误信息
+         *
+         * @var string
+         */
         private $errors;
 
+        /**
+         * 序列化返回结果
+         *
+         * @return void
+         */
         public function serialize()
         {
             if ($this->bError) {
@@ -28,6 +74,12 @@ namespace model\user {
             }
             return array('name' => $this->username, 'img' => $this->userimg);
         }
+        
+        /**
+         * 构造函数重载
+         *
+         * @return void
+         */
         public function __construct()
         {
             $this->bError = false;
@@ -38,16 +90,43 @@ namespace model\user {
                 call_user_func_array(array($this, $f), $a);
             }
         }
+        
+        /**
+         * 1个参数的构造函数
+         *
+         * @param  mixed $id 用户ID
+         *
+         * @return void
+         */
         public function __construct1($id)
         {
             $this->id = $id;
         }
+        
+        /**
+         * 2各参数的构造函数
+         *
+         * @param  mixed $name 用户名
+         * @param  mixed $img 用户头像
+         *
+         * @return void
+         */
         public function __construct2($name, $img)
         {
             $this->username = $name;
             // 图片使用默认图片
             //$this->userimg = $img;
         }
+
+        /**
+         * 3个参数的构造函数
+         *
+         * @param  mixed $id 用户ID
+         * @param  mixed $name 用户名
+         * @param  mixed $img 用户头像
+         *
+         * @return void
+         */
         public function __construct3($id, $name, $img)
         {
             $this->id = $id;
@@ -55,6 +134,14 @@ namespace model\user {
             // 图片使用默认图片
             //$this->userimg = $img;
         }
+
+        /**
+         * 更新用户密码
+         *
+         * @param  mixed $pwd 新的密码
+         *
+         * @return mixed
+         */
         public function updateUserPassword($pwd)
         {
             $pdo = new Pdo();
@@ -63,6 +150,15 @@ namespace model\user {
             $stmt = $pdo->querySQL($sql);
             return $stmt;
         }
+        
+        /**
+         * 用户是否登录
+         *
+         * @param  mixed $pwd 用户密码
+         * @param  mixed $token 用户token
+         *
+         * @return bool
+         */
         public function isLogin($pwd, $token)
         {
             $this->errors['haserror'] = true;
@@ -95,6 +191,14 @@ namespace model\user {
             }
             return $this->errors;
         }
+
+        /**
+         * 获取用户token
+         *
+         * @param  mixed $name 用户名
+         *
+         * @return mixed
+         */
         public function getUserToken($name)
         {
             $pdo = new Pdo();
@@ -117,6 +221,16 @@ namespace model\user {
                 "expire_time" => $row["expire_time"],
             );
         }
+        
+        /**
+         * 生成token
+         *
+         * @param  mixed $id 用户ID
+         * @param  mixed $name 用户名
+         * @param  mixed $passwd 用户密码
+         *
+         * @return string
+         */
         public function createToken($id, $name, $passwd)
         {
             $token = new Util\Token();
@@ -127,6 +241,16 @@ namespace model\user {
             $this->updateTokenAndExpireTime($id, $this->token, $expireTime);
             return $this->token;
         }
+        
+        /**
+         * 更新token和过期时间
+         *
+         * @param  mixed $id 用户ID
+         * @param  mixed $token 用户token
+         * @param  mixed $expireTime 过期时间
+         *
+         * @return void
+         */
         public function updateTokenAndExpireTime($id, $token, $expireTime)
         {
             $pdo = new Pdo();
@@ -141,6 +265,15 @@ namespace model\user {
                 return false;
             }
         }
+        
+        /**
+         * 删除记录
+         *
+         * @param  mixed $index 用户显示的索引
+         * @param  mixed $id 用户ID
+         *
+         * @return bool
+         */
         public function deleteRecord($index, $id)
         {
             $this->bAllRecord = true;
@@ -160,6 +293,12 @@ namespace model\user {
             $this->records["name"] = "user";
             return true;
         }
+        
+        /**
+         * 获取用户列表
+         *
+         * @return bool
+         */
         public function getTable()
         {
             $this->bAllRecord = true;
@@ -181,6 +320,14 @@ namespace model\user {
             $this->records["count"] = $index;
             return true;
         }
+        
+        /**
+         * 用户是否存在
+         *
+         * @param  mixed $name 用户名
+         *
+         * @return mixed
+         */
         private function isUserExist($name)
         {
             $pdo = new Pdo();
@@ -192,6 +339,12 @@ namespace model\user {
             }
             return $row;
         }
+        
+        /**
+         * 获取用户名和头像
+         *
+         * @return bool
+         */
         public function getUserNameAndImage()
         {
             $pdo = new Pdo();
@@ -204,7 +357,14 @@ namespace model\user {
             $row = $stmt->fetch();
             $this->username = $row['name'];
             $this->userimg = $row['img'];
+            return true;
         }
+        
+        /**
+         * 查询用户或者插入用户
+         *
+         * @return mixed
+         */
         public function selectUserByNameOrInsertUser()
         {
             if ($this->username == null) {

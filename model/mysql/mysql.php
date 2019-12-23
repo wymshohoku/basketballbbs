@@ -6,15 +6,60 @@ namespace model\mysql {
 
     class Pdo
     {
+        /**
+         * 数据库服务器名
+         *
+         * @var string
+         */
         private $servername;
+
+        /**
+         * 数据库名
+         *
+         * @var string
+         */
         private $dbname;
+
+        /**
+         * 用户名
+         *
+         * @var string
+         */
         private $username;
+
+        /**
+         * 用户密码
+         *
+         * @var string
+         */
         private $password;
+
+        /**
+         * 数据库字符设置
+         *
+         * @var string
+         */
         private $charset;
 
+        /**
+         * 保存数据库连接对象
+         *
+         * @var object
+         */
         private $conn;
+
+        /**
+         * 保存错误内容
+         *
+         * @var string
+         */
         private $error;
 
+        /**
+         * 构造函数
+         *
+         * @return void
+         */
         public function __construct()
         {
             $this->servername = "localhost";
@@ -32,19 +77,44 @@ namespace model\mysql {
                 $this->error = $e->getMessage();
             }
         }
+
+        /**
+         * 析构函数
+         *
+         * @return void
+         */
         public function __destruct()
         {
             $this->closeConnect();
         }
+        
+        /**
+         * 关闭数据库连接
+         *
+         * @return void
+         */
         public function closeConnect()
         {
             $this->conn = null;
         }
 
+        /**
+         * 返回错误信息
+         *
+         * @return string
+         */
         public function getErrorMsg()
         {
             return $this->error;
         }
+        
+        /**
+         * 执行数据库操作
+         *
+         * @param  mixed $sql SQL语句
+         *
+         * @return mixed
+         */
         public function querySQL($sql)
         {
             try {
@@ -55,6 +125,15 @@ namespace model\mysql {
             }
             return $result;
         }
+        
+        /**
+         * 预处理执行SQL
+         *
+         * @param  mixed $sql SQL语句
+         * @param  mixed $params 参数
+         *
+         * @return mixed
+         */
         public function prepareSQL($sql, $params)
         {
             $stmt = $this->conn->prepare($sql);

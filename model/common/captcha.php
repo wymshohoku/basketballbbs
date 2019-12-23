@@ -55,11 +55,23 @@ namespace model\util {
         //销毁
         imagedestroy($image);
     }
+
+    
+    /**
+     * 获取存储的验证码
+     *
+     * @return string
+     */
     function getAuthCode()
     {
         return $_SESSION['authcode'];
     }
     
+    /**
+     * 是否是获取验证码请求
+     *
+     * @return bool
+     */
     function isAuthCode()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['r'])) {

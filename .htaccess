@@ -1,6 +1,7 @@
 RewriteRule ^(/)?$ view/index/index.php
 RewriteRule ^admin/$ controller/admin/admin.php
 RewriteRule ^login/$ view/admin/login.php
+RewriteRule ^error/(.*)\.html$ view/error/$1.html
 RewriteRule ^articles/([0-9]*)/$ view/index/bbs.php?art_id=$1
 RewriteRule ^articles/([0-9]*)/submit$ view/index/bbs.php
 RewriteRule ^articles/([0-9]*)/page/(\w+)/$ view/index/bbs.php?art_id=$1&page_index=$2

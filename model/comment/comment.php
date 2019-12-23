@@ -9,17 +9,81 @@ namespace model\comment {
 
     class comment
     {
+        /**
+         * 评论ID
+         *
+         * @var integer
+         */
         private $id;
+
+        /**
+         * 文章ID
+         *
+         * @var integer
+         */
         private $articleid;
+
+        /**
+         * 用户
+         *
+         * @var [type]
+         */
         private $user;
+
+        /**
+         * 评论时间
+         *
+         * @var string
+         */
         private $datetime;
+
+        /**
+         * 评论内容
+         *
+         * @var string
+         */
         private $msg;
+
+        /**
+         * 审核：0，已删除；1，未审核；2，已审核
+         *
+         * @var integer
+         */
         private $approval;
+
+        /**
+         * 存放所有记录
+         *
+         * @var array
+         */
         private $records;
+
+        /**
+         * 是否有错误
+         *
+         * @var bool
+         */
         private $bError;
+
+        /**
+         * 是否返回所有记录
+         *
+         * @var [type]
+         */
         private $bAllRecord;
+
+        /**
+         * 存放评论内容
+         *
+         * @var array
+         */
         private static $comments = array();
 
+         /**
+         * 构造函数重载调用
+         *
+         * @return void
+         */
         public function __construct()
         {
             $this->bError = false;
@@ -31,6 +95,16 @@ namespace model\comment {
             }
         }
         
+        /**
+         * 4个参数的构造函数
+         *
+         * @param  mixed $artid 文章ID
+         * @param  mixed $name 用户名
+         * @param  mixed $msg 评论内容
+         * @param  mixed $datetime 评论时间
+         *
+         * @return void
+         */
         public function __construct4($artid, $name, $msg, $datetime)
         {
             $this->articleid = $artid;
@@ -40,6 +114,17 @@ namespace model\comment {
             $this->approval = 1; // 0，已删除 1，未审核 2，已审核
         }
 
+        /**
+         * 5个参数的构造函数
+         *
+         * @param  mixed $id 评论ID
+         * @param  mixed $userid 用户ID
+         * @param  mixed $datetime 评论时间
+         * @param  mixed $msg 评论内容
+         * @param  mixed $approval 审核状态
+         *
+         * @return void
+         */
         public function __construct5($id, $userid, $datetime, $msg, $approval)
         {
             $this->user = new user($userid);
@@ -50,6 +135,18 @@ namespace model\comment {
             $this->approval = $approval;
         }
 
+        /**
+         * 6个参数的构造函数
+         *
+         * @param  mixed $artid 文章ID
+         * @param  mixed $name 用户名
+         * @param  mixed $msg 评论内容
+         * @param  mixed $datetime 评论时间
+         * @param  mixed $userid 用户ID
+         * @param  mixed $approval 审核状态
+         *
+         * @return void
+         */
         public function __construct6($artid, $name, $msg, $datetime, $userid, $approval)
         {
             $this->user = new user($userid, $name, 'img');
@@ -58,6 +155,12 @@ namespace model\comment {
             $this->msg = $msg;
             $this->approval = $approval;
         }
+        
+        /**
+         * 序列化返回内容
+         *
+         * @return array
+         */
         public function serialize()
         {
             if ($this->bAllRecord || $this->bError) {
@@ -72,10 +175,24 @@ namespace model\comment {
                 'msg' => $this->msg,
             );
         }
+        
+        /**
+         * 获取评论列表
+         *
+         * @return array
+         */
         public static function getComments()
         {
             return self::$comments;
         }
+        
+        /**
+         * 根据文章ID获取所有评论
+         *
+         * @param  mixed $articleid 文章ID
+         *
+         * @return integer
+         */
         public static function getAllRecordsByArticleId($articleid)
         {
             //$_SESSION['comment_current_page_index'] * $this->comment_page_count
@@ -91,6 +208,16 @@ namespace model\comment {
             }
             return 0;
         }
+        
+        /**
+         * 通过文章ID返回当前页的评论列表
+         *
+         * @param  mixed $articleid 文章ID
+         * @param  mixed $limit 获取评论数量
+         * @param  mixed $offset 评论起始位置
+         *
+         * @return integer
+         */
         public static function getRecordForCurrentPageByArticleId($articleid, $limit, $offset)
         {
             //$_SESSION['comment_current_page_index'] * $this->comment_page_count
@@ -116,6 +243,14 @@ namespace model\comment {
             }
             return 0;
         }
+        
+        /**
+         * 删除用户的所有评论
+         *
+         * @param  mixed $id 用户ID
+         *
+         * @return bool
+         */
         public function deleteRecordByUserId($id)
         {
             $pdo = new Pdo();
@@ -127,6 +262,14 @@ namespace model\comment {
             }
             return true;
         }
+        
+        /**
+         * 删除指定文章的评论
+         *
+         * @param  mixed $id 文章ID
+         *
+         * @return bool
+         */
         public function deleteRecordByArticleId($id)
         {
             $pdo = new Pdo();
@@ -138,6 +281,15 @@ namespace model\comment {
             }
             return true;
         }
+        
+        /**
+         * 删除指定ID的评论
+         *
+         * @param  mixed $index 评论显示的索引
+         * @param  mixed $id 评论ID
+         *
+         * @return bool
+         */
         public function deleteRecord($index, $id)
         {
             $this->bAllRecord = true;
@@ -155,6 +307,12 @@ namespace model\comment {
             $this->records["name"] = "comment";
             return true;
         }
+        
+        /**
+         * 获取所有评论
+         *
+         * @return bool
+         */
         public function getTable()
         {
             $this->bAllRecord = true;
@@ -179,6 +337,12 @@ namespace model\comment {
             $this->records["count"] = $index;
             return true;
         }
+        
+        /**
+         * 插入评论记录
+         *
+         * @return bool
+         */
         public function insertRecord()
         {
             $userid = $this->user->selectUserByNameOrInsertUser();
@@ -208,10 +372,28 @@ namespace model\comment {
             }
             return false;
         }
+        
+        /**
+         * 用户是否登录
+         *
+         * @param  mixed $pwd 用户密码
+         * @param  mixed $token 用户token
+         *
+         * @return bool
+         */
         public function isLogin($pwd, $token)
         {
             return $this->user->isLogin($pwd, $token);
         }
+        
+        /**
+         * 更新评论审核的结果
+         *
+         * @param  mixed $index 评论显示的索引
+         * @param  mixed $id 评论ID
+         *
+         * @return bool
+         */
         public function updateCommentApproval($index, $id)
         {
             $this->bAllRecord = true;
