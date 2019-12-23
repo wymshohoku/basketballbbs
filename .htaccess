@@ -6,6 +6,6 @@ RewriteRule ^articles/([0-9]*)/$ view/index/bbs.php?art_id=$1
 RewriteRule ^articles/([0-9]*)/submit$ view/index/bbs.php
 RewriteRule ^articles/([0-9]*)/page/(\w+)/$ view/index/bbs.php?art_id=$1&page_index=$2
 RewriteRule ^(.*)/r/(.*)$ view/index/bbs.php?r=$2 [L]
-RewriteRule ^(.*)/scripts/(.*)\.js$ view/scripts/$2.js [L]
-RewriteRule ^(.*)/styles/(.*)\.css$ view/styles/$2.css [L]
-RewriteRule ^(.*)/images/(.*)\.(png|jpg)$ view/images/$2.$3 [L]
+RewriteRule ^(.*)scripts/(.*)\.js$ view/scripts/$2.js [L]
+RewriteRule ^(.*)styles/(.*)\.css$ view/styles/$2.css [L]
+RewriteRule ^(.*)images/(.*)\.(png|jpg)$ view/images/$2.$3 [L]
