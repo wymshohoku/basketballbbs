@@ -1,18 +1,33 @@
 <?php
 
 require_once '../../model/admin/admin.php';
+
 use model\admin\Admin;
 
 session_start();
 
+$view = "1";
+if(isset($_GET["view"]))
+    $view = $_GET["view"];
+    
+switch ($view) {
+    case "login":
+        break;
+    case "admin":
+        break;
+    case "";
+        header('location:/login/');
+        exit();
+}
+
 //  判断是否登陆
 if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
     $json = "";
-    if(isset($_POST["LoginOut"])){
+    if (isset($_POST["LoginOut"])) {
         // 更新用户的token
         $_SESSION["admin"] = false;
         header('Content-Type:application/json; charset=utf-8');
-        $json = json_encode(array('location'=>'/login/'));
+        $json = json_encode(array('location' => '/login/'));
         exit($json);
     }
     if (isset($_POST["src"]) && isset($_POST["func"])) {
@@ -124,6 +139,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
             display: block;
             color: floralwhite;
         }
+
         .pg-content .menu {
             /* position: relative;
             top: 10px;
@@ -145,6 +161,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
             overflow: auto;
             z-index: 9;
         }
+
         .pg-footer {
             position: fixed;
             top: 100px;
@@ -154,6 +171,7 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
             background-color: #2459a2;
             overflow: auto;
         }
+
         .left {
             float: left;
         }
@@ -247,7 +265,8 @@ if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
                         <th>内容</th>
                         <th>状态</th>
                         <th>操作</th>
-                    </tr><!-- 
+                    </tr>
+                    <!-- 
                     <tr>
                         <td class="text-center">1</td>
                         <td>$100</td>

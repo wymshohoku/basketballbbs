@@ -56,7 +56,7 @@ $articles_json = $art->serialize();
             <p>篮球世界是一个全球社区，这里聚集着来自五湖四海的</p>
             <ul id="art_list">
                 <?php foreach ($articles_json['articles'] as $article) { ?>
-                    <li><a href="<?php echo 'articles/' . $article['id']; ?>/"><?php echo $article['title']; ?></a></li>
+                    <li><a href="<?php echo 'articles/' . $article['id']; ?>"><?php echo $article['title']; ?></a></li>
                 <?php } ?>
             </ul>
             <p>我们致力于……</p>

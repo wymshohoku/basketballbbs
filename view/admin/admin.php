@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+//  判断是否登陆
+if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== true) {
+    header('location:/login/');
+    exit();
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 
@@ -82,6 +93,7 @@
             display: block;
             color: floralwhite;
         }
+
         .pg-content .menu {
             /* position: relative;
             top: 10px;
@@ -103,6 +115,7 @@
             overflow: auto;
             z-index: 9;
         }
+
         .pg-footer {
             position: fixed;
             top: 100px;
@@ -112,6 +125,7 @@
             background-color: #2459a2;
             overflow: auto;
         }
+
         .left {
             float: left;
         }
@@ -205,7 +219,8 @@
                         <th>内容</th>
                         <th>状态</th>
                         <th>操作</th>
-                    </tr><!-- 
+                    </tr>
+                    <!-- 
                     <tr>
                         <td class="text-center">1</td>
                         <td>$100</td>
