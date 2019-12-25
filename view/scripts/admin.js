@@ -89,7 +89,7 @@ function loadTable(url, method, func, callback) {
             callback(xhr.response);
     };
 
-    var data = "src=" + func + "&func=select_all";
+    var data = "view=" + func + "&func=select_all";
     xhr.send(data);
 }
 

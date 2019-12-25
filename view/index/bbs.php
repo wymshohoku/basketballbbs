@@ -2,55 +2,41 @@
 
 session_start();
 
-require_once '../../model/index/bbs.php';
+require_once '../../controller/index/bbs.php';
 
-use model\comment\comment;
-use model\index\bbs as CBbs;
+use controller\index\Bbs as CBbs;
 
-if (CBbs::isAuthCode()) {
-    // 生成验证码图片
-    CBbs::getAuthCodeImg();
-    exit();
-} elseif (CBbs::isUserSubmitComment()) {
-    $json = null;
-    $bbs = new CBbs();
-    if ($bbs->checkToken($_POST['art_id'], $_POST['token'])) {
-        // 验证提交评论的验证码
-        if ($bbs->checkAuthCode($_POST['authcode'])) {
-            // 提交评论
-            $bbs->submitComment(
-                $_POST['art_id'],
-                $_POST['username'],
-                $_POST['msg'],
-                $_POST['time'],
-                $_POST['id'],
-                $_POST['pwd'],
-                $_POST['token']
-            );
+$json = "";
+$view = "";
+if (isset($_GET["view"]))
+    $view = $_GET["view"];
+if (isset($_POST["view"]))
+    $view = $_POST["view"];
+$bbs = new CBbs();
+
+switch ($view) {
+    case "single":// 对单个文章的请求进行处理
+        if (isset($_GET["id"])) {
+            $art_id = $_GET["id"];
+
+            if (isset($_GET["r"])) {// 获取验证码图片
+                $r = $_GET["r"];
+                $bbs->getAuthCode();
+                exit();
+            } elseif (isset($_GET["page"])) {// 获取指定分页的评论
+                $page = $_GET["page"];
+
+                $json = $bbs->getCommentsByArticleID($art_id, $page);
+                exit($json);
+            } else {// 获取指定ID的文章内容
+                $json = $bbs->getArticleByID($art_id);
+            }
         }
-    }
-    header('Content-Type:application/json; charset=utf-8');
-    $json = json_encode($bbs->serialize());
-    exit($json);
-} elseif (CBbs::isStoreArticleId() && isset($_GET['token'])) {
-    if (CBbs::checkToken($_GET['art_id'], $_GET['token'])) {
-    }
-    exit(); 
-}elseif (CBbs::isUserClickArticle()) { // 用户点击文章链接
-    $bbs = new CBbs();
-    if (CBbs::isUserClickPage()) { // 用户点击翻页
-        $bbs->getArticle($_GET['page_index']);
-
-        header('Content-Type:application/json; charset=utf-8');
-        $json = json_encode($bbs->serialize());
+        break;
+    case "submit":// 处理文章评论的提交请求
+        $json = $bbs->submitComment($_POST);
         exit($json);
-    } else {
-        CBbs::setArticleId($_GET['art_id']);
-        // 用户点击了文章链接跳转，获取该文章和所有评论
-        $bbs->getArticle(1);
-    }
-
-    $json = $bbs->serialize();
+        break;
 }
 ?>
 
@@ -59,19 +45,19 @@ if (CBbs::isAuthCode()) {
 
 <head>
     <meta charset="utf-8" />
-    <link href="styles/normalize.css" rel="stylesheet" type="text/css" />
-    <link href="styles/bbs.css" rel="stylesheet" type="text/css" />
+    <link href="/styles/normalize.css" rel="stylesheet" type="text/css" />
+    <link href="/styles/bbs.css" rel="stylesheet" type="text/css" />
     <link href="https://fonts.font.im/css?family=Open+Sans" rel="stylesheet" type="text/css" />
     <title>篮球世界</title>
 </head>
 
 <body>
-    <script src="scripts/bbs.js"></script>
+    <script src="/scripts/bbs.js"></script>
     <header>
         <!-- 本站所有网页的统一主标题 -->
-        <img src="images/beachball.png" />
+        <img src="/images/beachball.png" />
         <h1 class="siteWorld">欢迎来到<strong>篮球世界</strong></h1>
-        <img src="images/beachball.png" />
+        <img src="/images/beachball.png" />
     </header>
 
     <nav>
@@ -100,27 +86,18 @@ if (CBbs::isAuthCode()) {
                 </div>
             </h3>
             <div class="user_comment">
-                <?php
-                $page_pre_cnt = $json['comment_pre_paga_count'];
-                $page_index = $json['comment_page_index'];
-                $i = $page_pre_cnt * ($page_index - 1) + 1;
-                foreach ($json['comments'] as $comment) {
-                    $i++;
-                ?>
-                    <div class="user_info" id="comment-<?php echo $comment['commentid']; ?>">
-                        <img class="img_user" id="img-user" src="<?php echo $comment['userimg']; ?>" alt="" />
-                        <div class="user">
-                            <div class="name" id="username">
-                                <?php echo $comment['username']; ?>
-                            </div>
-                            <div class="comment_info">
-                                <span><?php echo $i; ?>楼 </span>
-                                <time><?php echo $comment['time']; ?></time>
-                            </div>
-                            <div class="comment_text" id="msg"><?php echo $comment['msg']; ?></div>
+                <div class="user_info" id="">
+                    <img class="img_user" id="img-user" src="" alt="" />
+                    <div class="user">
+                        <div class="name" id="username">
                         </div>
+                        <div class="comment_info">
+                            <span>楼 </span>
+                            <time></time>
+                        </div>
+                        <div class="comment_text" id="msg"></div>
                     </div>
-                <?php } ?>
+                </div>
             </div>
             <div id="comment-pages">
                 <div class="first" id="home">首页</div>

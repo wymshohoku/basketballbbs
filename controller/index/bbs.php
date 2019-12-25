@@ -1,6 +1,6 @@
 <?php
 
-namespace model\index {
+namespace controller\index {
     require_once '../../model/common/util.php';
     require_once '../../model/common/captcha.php';
     require_once '../../model/article/article.php';
@@ -8,19 +8,7 @@ namespace model\index {
     use model\article\article;
     use model\util as Util;
 
-    /**
-     * 过滤字符串
-     *
-     * @param  mixed $data 需要过滤的字符串
-     *
-     * @return string
-     */
-    function test_input($data)
-    {
-        return Util\DataVerify::test_input($data);
-    }
-
-    class bbs
+    class Bbs
     {
         /**
          * 文章对象
@@ -43,7 +31,6 @@ namespace model\index {
          */
         private $msg;
 
-        
         /**
          * 检查token
          *
@@ -52,9 +39,9 @@ namespace model\index {
          *
          * @return bool
          */
-        public function checkToken($art_id, $token)
+        private function checkToken($art_id, $token)
         {
-            return $this->art->checkToken(test_input($art_id), $token);
+            return $this->art->checkToken($this->test_input($art_id), $token);
         }
 
         /**
@@ -62,14 +49,14 @@ namespace model\index {
          *
          * @return array
          */
-        public function serialize()
+        private function serialize()
         {
             if ($this->berror) {
                 return $this->msg;
             }
             return $this->art->serialize();
         }
-        
+
         /**
          * 构造函数
          *
@@ -78,7 +65,7 @@ namespace model\index {
         public function __construct()
         {
             $this->berror = false;
-            $this->art = new article(self::getArticleId());
+            $this->art = new article($this->getArticleId());
         }
 
         /**
@@ -87,36 +74,41 @@ namespace model\index {
          * @param integer $id 文章ID
          * @return void
          */
-        public static function setArticleId($id)
+        private function setArticleId($id)
         {
-            $_SESSION['art_id'] = test_input($id);
+            $_SESSION['art_id'] = $this->test_input($id);
         }
 
         /**
-         * 是否存储了文章ID
+         * 获取文章
          *
-         * @return bool
-         */
-        public static function isStoreArticleId()
-        {
-            if (isset($_SESSION['art_id'])) {
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * 获取文章和评论
-         *
-         * @param  mixed $comment_current_page_index 当前分页索引
+         * @param  mixed $art_id 当前文章ID
          *
          * @return void
          */
-        public function getArticle($comment_current_page_index)
+        private function getArticle($art_id)
         {
-            $index = test_input($comment_current_page_index);
+            // 从数据库读取当前文章的评论
+            $ret = $this->art->getRecordById($art_id);
+            if ($ret === false) {
+                header('location:/error/404.html');
+                exit();
+            }
+        }
+
+        /**
+         * 获取文章评论
+         *
+         * @param  mixed $artid 文章ID
+         * @param  mixed $page 当前分页
+         *
+         * @return void
+         */
+        private function getArticleComments($artid, $page)
+        {
+            $index = $this->test_input($page);
             if (!isset($_SESSION['comment_current_page_index'])) {
-                $_SESSION['comment_current_page_index'] = 1;
+                $_SESSION['comment_current_page_index'] = $index;
             }
             $curr_index = $_SESSION['comment_current_page_index'];
             if ($index === "prev") {
@@ -126,14 +118,7 @@ namespace model\index {
             } else {
                 $curr_index = (int) $index;
             }
-            // 从数据库读取当前文章的评论
-            $ret = $this->art->getRecordById($_SESSION['art_id'], $curr_index);
-            if ($ret === false) {
-                header('location:/error/404.html');
-                exit();
-            } else {
-                $_SESSION['comment_current_page_index'] = $ret;
-            }
+            $_SESSION['comment_current_page_index'] = $this->art->getArticleCommnets($this->test_input($artid), $curr_index);
         }
 
         /**
@@ -141,7 +126,7 @@ namespace model\index {
          *
          * @return integer
          */
-        public static function getArticleId()
+        private function getArticleId()
         {
             if (isset($_SESSION['art_id'])) {
                 return $_SESSION['art_id'];
@@ -151,67 +136,23 @@ namespace model\index {
         }
 
         /**
-         * 是否用户点击了文章翻页
-         *
-         * @return bool
-         */
-        public static function isUserClickPage()
-        {
-            if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['page_index'])) {
-                return true;
-            }
-            return false;
-        }
-
-        /**
-         * 是否用户点击了文章链接
-         *
-         * @return void
-         */
-        public static function isUserClickArticle()
-        {
-            if ($_SERVER['REQUEST_METHOD'] === 'GET' && !empty($_GET) && isset($_GET['art_id'])) {
-                return true;
-            }
-            return false;
-        }
-
-        /**
          * 是否是获取验证码请求
          *
          * @return void
          */
-        public static function isAuthCode()
+        private function isAuthCode()
         {
             return Util\isAuthCode();
         }
-        
+
         /**
          * 返回验证码
          *
          * @return object
          */
-        public static function getAuthCodeImg()
+        private function getAuthCodeImg()
         {
             return Util\getAuthCodeImg();
-        }
-
-        /**
-         * 是否用户提交了评论
-         *
-         * @return bool
-         */
-        public static function isUserSubmitComment()
-        {
-            if (
-                $_SERVER['REQUEST_METHOD'] === 'POST'
-                && !empty($_POST) 
-                && isset($_POST['submit'])
-                && $_POST['submit'] == true
-            ) {
-                return true;
-            }
-            return false;
         }
 
         /**
@@ -221,7 +162,7 @@ namespace model\index {
          *
          * @return bool
          */
-        public function checkAuthCode($code)
+        private function checkAuthCode($code)
         {
             if (Util\getAuthCode() === $code) {
                 return true;
@@ -233,34 +174,96 @@ namespace model\index {
             $this->msg['error'][] = '验证码不正确，请重新输入！';
             return false;
         }
-        
+
         /**
          * 提交评论
          *
          * @param  mixed $art_id 文章ID
          * @param  mixed $name 评论用户名
          * @param  mixed $msg 评论内容
-         * @param  mixed $datetime 评论时间
          * @param  mixed $userid 用户ID
          * @param  mixed $pwd 用户密码
          * @param  mixed $token 用户token
          *
          * @return bool
          */
-        public function submitComment($art_id, $name, $msg, $datetime, $userid, $pwd, $token)
+        private function submit($art_id, $name, $msg, $userid, $pwd, $token)
         {
+            $datetime = date("Y-m-d H:i:s", time());
             $this->berror = true;
             $this->msg['haserror'] = true;
             $this->msg['token'] = $this->art->getToken($_SESSION['art_id']);
             $this->msg['error'][] = '文章ID错误！';
-            $art_id = test_input($art_id);
+            $art_id = $this->test_input($art_id);
             // 提交的评论的文章id是否是当前访问的文章id
             if ($art_id === $_SESSION['art_id']) {
-                $this->msg = $this->art->insertComment($art_id, test_input($name), test_input($msg), test_input($datetime), test_input($userid), test_input($pwd), test_input($token));
+                $this->msg = $this->art->insertComment(
+                    $art_id,
+                    $this->test_input($name),
+                    $this->test_input($msg),
+                    $datetime,
+                    $this->test_input($userid),
+                    $this->test_input($pwd),
+                    $this->test_input($token)
+                );
                 $this->berror = $this->msg['haserror'];
             }
 
             return $this->berror;
+        }
+
+        /**
+         * 过滤字符串
+         *
+         * @param  mixed $data 需要过滤的字符串
+         *
+         * @return string
+         */
+        private function test_input($data)
+        {
+            return Util\DataVerify::test_input($data);
+        }
+
+        public function getArticleByID($art_id)
+        {
+            $this->setArticleId($art_id);
+
+            // 用户点击了文章链接跳转，获取该文章和所有评论
+            $this->getArticle($art_id);
+            return $this->serialize();
+        }
+
+        public function getCommentsByArticleID($art_id, $page)
+        {
+            $this->getArticleComments($art_id, $page);
+            return json_encode($this->serialize());
+        }
+
+        public function getAuthCode()
+        {
+            if ($this->isAuthCode()) {
+                $this->getAuthCodeImg();
+            }
+        }
+
+        public function submitComment($info)
+        {
+            if ($this->checkToken($info['art_id'], $info['token'])) {
+                // 验证提交评论的验证码
+                if ($this->checkAuthCode($info['authcode'])) {
+                    // 提交评论
+                    $this->submit(
+                        $info['art_id'],
+                        $info['username'],
+                        $info['msg'],
+                        $info['id'],
+                        $info['pwd'],
+                        $info['token']
+                    );
+                }
+            }
+            header('Content-Type:application/json; charset=utf-8');
+            return json_encode($this->serialize());
         }
     }
 }

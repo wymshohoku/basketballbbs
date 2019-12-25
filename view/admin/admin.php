@@ -1,9 +1,32 @@
 <?php
+require_once '../../controller/admin/admin.php';
+
+use controller\admin\Admin;
+
 session_start();
+
+
+$view = "";
+if (isset($_GET["view"]))
+    $view = $_GET["view"];
+if (isset($_POST["view"]))
+    $view = $_POST["view"];
+
+$admin = new Admin($view);
+
+switch ($view) {
+    case "login":
+        break;
+    case "admin":
+        break;
+    case "";
+        $admin->isLogin();
+        exit();
+}
 
 //  判断是否登陆
 if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== true) {
-    header('location:/login/');
+    header('location:/login');
     exit();
 }
 
@@ -16,7 +39,7 @@ if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== true) {
     <meta charset="utf-8">
     <link href="https://fonts.font.im/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <title>篮球世界</title>
-    <script src="scripts/admin.js"></script>
+    <script src="/scripts/admin.js"></script>
 
     <style>
         body {
@@ -161,7 +184,7 @@ if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== true) {
         <div class="user right">
             <div>
                 <a href="#">
-                    <img src="images/beachball.png">
+                    <img src="/images/beachball.png">
                 </a>
             </div>
             <div class="username">

@@ -4,12 +4,24 @@ require_once '../../model/article/article.php';
 
 use model\article\article;
 
-/**
- * 返回文章列表
- */
-$art = new article();
-$art->getTable();
-$articles_json = $art->serialize();
+$articles_json = "";
+$view = "";
+if (isset($_GET["view"]))
+    $view = $_GET["view"];
+
+switch ($view) {
+    case "all":
+        /**
+         * 返回文章列表
+         */
+        $art = new article();
+        $art->getTable();
+        $articles_json = $art->serialize();
+        break;
+    case "":
+        break;
+}
+
 
 ?>
 
@@ -21,8 +33,8 @@ $articles_json = $art->serialize();
     <!-- <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
     crossorigin="anonymous"></script> -->
     <!-- <script src="scripts/main.js"></script> -->
-    <link href="styles/normalize.css" rel="stylesheet" type="text/css">
-    <link href="styles/style.css" rel="stylesheet" type="text/css">
+    <link href="/styles/normalize.css" rel="stylesheet" type="text/css">
+    <link href="/styles/style.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.font.im/css?family=Open+Sans" rel="stylesheet" type="text/css">
     <title>篮球世界</title>
 </head>
@@ -30,9 +42,9 @@ $articles_json = $art->serialize();
 <body>
     <header>
         <!-- 本站所有网页的统一主标题 -->
-        <img src="images/beachball.png">
+        <img src="/images/beachball.png">
         <h1>欢迎来到<strong>篮球世界</strong></h1>
-        <img src="images/beachball.png">
+        <img src="/images/beachball.png">
     </header>
 
     <nav>
@@ -52,11 +64,11 @@ $articles_json = $art->serialize();
     <main>
         <!-- 网页主体内容 -->
         <article>
-            <img name="site" src="images/site.jpg" alt="My test image">
+            <img name="site" src="/images/site.jpg" alt="My test image">
             <p>篮球世界是一个全球社区，这里聚集着来自五湖四海的</p>
             <ul id="art_list">
                 <?php foreach ($articles_json['articles'] as $article) { ?>
-                    <li><a href="<?php echo 'articles/' . $article['id']; ?>"><?php echo $article['title']; ?></a></li>
+                    <li><a href="<?php echo 'articles/' . $article['id']; ?>/"><?php echo $article['title']; ?></a></li>
                 <?php } ?>
             </ul>
             <p>我们致力于……</p>

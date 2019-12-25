@@ -79,7 +79,7 @@ namespace model\comment {
          */
         private static $comments = array();
 
-         /**
+        /**
          * 构造函数重载调用
          *
          * @return void
@@ -94,7 +94,7 @@ namespace model\comment {
                 call_user_func_array(array($this, $f), $a);
             }
         }
-        
+
         /**
          * 4个参数的构造函数
          *
@@ -155,7 +155,7 @@ namespace model\comment {
             $this->msg = $msg;
             $this->approval = $approval;
         }
-        
+
         /**
          * 序列化返回内容
          *
@@ -166,7 +166,8 @@ namespace model\comment {
             if ($this->bAllRecord || $this->bError) {
                 return $this->records;
             }
-            return array('commentid' => $this->id,
+            return array(
+                'commentid' => $this->id,
                 //'userid' => $this->user->serialize()['id'],
                 'username' => $this->user->serialize()['name'],
                 'userimg' => $this->user->serialize()['img'],
@@ -175,7 +176,7 @@ namespace model\comment {
                 'msg' => $this->msg,
             );
         }
-        
+
         /**
          * 获取评论列表
          *
@@ -185,7 +186,7 @@ namespace model\comment {
         {
             return self::$comments;
         }
-        
+
         /**
          * 根据文章ID获取所有评论
          *
@@ -199,7 +200,7 @@ namespace model\comment {
             $pdo = new Pdo();
             // SELECT distinct users.img, users.name, comments.date, comments.comment FROM article, users, comments WHERE comments.articleid='1' and comments.userid=users.id
             $sql = "SELECT COUNT(*) FROM comments " .
-                "WHERE comments.articleid='" . $articleid . "'";
+                "WHERE articleid='" . $articleid . "' AND approval='2'";
             $stmt = $pdo->querySQL($sql);
 
             if ($stmt != false) {
@@ -208,7 +209,7 @@ namespace model\comment {
             }
             return 0;
         }
-        
+
         /**
          * 通过文章ID返回当前页的评论列表
          *
@@ -224,7 +225,7 @@ namespace model\comment {
             $pdo = new Pdo();
             // SELECT distinct users.img, users.name, comments.date, comments.comment FROM article, users, comments WHERE comments.articleid='1' and comments.userid=users.id
             $sql = "SELECT id, userid, date, comment, approval FROM comments " .
-                "WHERE comments.articleid='" . $articleid . "' " .
+                "WHERE articleid='" . $articleid . "' AND approval='2'" .
                 "ORDER BY date DESC " .
                 "LIMIT " . $limit . " " .
                 "OFFSET " . $offset;
@@ -233,17 +234,15 @@ namespace model\comment {
             if ($stmt != false) {
                 $count = 0;
                 while ($row = $stmt->fetch()) {
-                    if ($row['approval'] === '2') {
-                        $count += 1;
-                        $comment = new comment($row['id'], $row['userid'], $row['date'], $row['comment'], $row['approval']);
-                        self::$comments[] = $comment->serialize();
-                    }
+                    $count += 1;
+                    $comment = new comment($row['id'], $row['userid'], $row['date'], $row['comment'], $row['approval']);
+                    self::$comments[] = $comment->serialize();
                 }
                 return $count;
             }
             return 0;
         }
-        
+
         /**
          * 删除用户的所有评论
          *
@@ -262,7 +261,7 @@ namespace model\comment {
             }
             return true;
         }
-        
+
         /**
          * 删除指定文章的评论
          *
@@ -281,7 +280,7 @@ namespace model\comment {
             }
             return true;
         }
-        
+
         /**
          * 删除指定ID的评论
          *
@@ -293,7 +292,7 @@ namespace model\comment {
         public function deleteRecord($index, $id)
         {
             $this->bAllRecord = true;
-            
+
             $pdo = new Pdo();
             // 查询用户
             $sql = "DELETE FROM comments WHERE id = '" . $id . "'";
@@ -307,7 +306,7 @@ namespace model\comment {
             $this->records["name"] = "comment";
             return true;
         }
-        
+
         /**
          * 获取所有评论
          *
@@ -337,7 +336,7 @@ namespace model\comment {
             $this->records["count"] = $index;
             return true;
         }
-        
+
         /**
          * 插入评论记录
          *
@@ -348,7 +347,7 @@ namespace model\comment {
             $userid = $this->user->selectUserByNameOrInsertUser();
 
             if ($userid != false) {
-                if($this->msg === null){
+                if ($this->msg === null) {
                     $this->bError = true;
                     $this->bAllRecord["error"][] = "留言内容包含非法字符！";
                     return false;
@@ -361,7 +360,6 @@ namespace model\comment {
                 try {
                     $stmt = $pdo->prepareSQL($sql, array($this->articleid, $userid, $this->msg, $this->datetime));
                     return $stmt;
-
                 } catch (\PDOException $e) {
                     echo $sql . "<br>" . $e->getMessage();
                     return false;
@@ -372,7 +370,7 @@ namespace model\comment {
             }
             return false;
         }
-        
+
         /**
          * 用户是否登录
          *
@@ -385,7 +383,7 @@ namespace model\comment {
         {
             return $this->user->isLogin($pwd, $token);
         }
-        
+
         /**
          * 更新评论审核的结果
          *
@@ -397,7 +395,7 @@ namespace model\comment {
         public function updateCommentApproval($index, $id)
         {
             $this->bAllRecord = true;
-            
+
             $pdo = new Pdo();
             // 查询用户
             $sql = "UPDATE comments SET approval=2 WHERE id = '" . $id . "'";

@@ -296,7 +296,7 @@ namespace model\article {
          *
          * @return void
          */
-        public function getRecordById($artid, $comment_current_page_index)
+        public function getRecordById($artid)
         {
             $pdo = new Pdo();
             $sql = "SELECT title, text FROM " . ARTICLE_TABLE_NAME . " WHERE id='" . $artid . "'";
@@ -309,12 +309,16 @@ namespace model\article {
             $this->art_id = $_SESSION['art_id'];
             $this->art_title = $row['title'];
             $this->art_text = $row['text'];
+        }
+        
+        public function getArticleCommnets($artid, $comment_current_page_index)
+        {
             $this->comment_pages = 0;
             $this->comment_count = 0;
             $this->comment_page_index = $comment_current_page_index;
 
             // 获取评论的总数
-            $this->comment_count = comment::getAllRecordsByArticleId($this->art_id);
+            $this->comment_count = comment::getAllRecordsByArticleId($artid);
 
             // 判断分页是否超出范围
             $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
@@ -324,13 +328,12 @@ namespace model\article {
             // 获取当前分页的评论
             $offset = ($this->comment_page_index - 1) * COMMENT_PAGE_COUNT;
             // 获取当前页评论的数量
-            $this->comment_current_page_count = comment::getRecordForCurrentPageByArticleId($this->art_id, COMMENT_PAGE_COUNT, $offset);
+            $this->comment_current_page_count = comment::getRecordForCurrentPageByArticleId($artid, COMMENT_PAGE_COUNT, $offset);
             $_SESSION['comment_count'] = $this->comment_count;
             $this->comment_array = comment::getComments();
 
             return $this->comment_page_index;
         }
-        
         /**
          * 插入评论
          *

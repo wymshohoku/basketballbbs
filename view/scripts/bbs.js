@@ -4,7 +4,6 @@ window.addEventListener("load", function () {
 	// 提交表单数据，并验证数据的有效性，过滤字符串
 	var form = document.querySelector("#commentForm");
 	form.onsubmit = function (e) {
-		var comment_time = new Date().Format("yyyy-MM-dd hh:mm:ss");
 		var art_id = document.querySelector(".art_title").id;
 		var user_id = form.querySelector("#userid").value;
 		var name = form.querySelector("#username").value;
@@ -24,15 +23,14 @@ window.addEventListener("load", function () {
 			form.querySelector("#wd").style.display = "inline";
 			form.querySelector("#password").type = "password";
 		} else {
-			var data = "submit=true" +
-				"&art_id=" + art_id +
+			var data = "&art_id=" + art_id +
 				"&id=" + user_id +
 				"&username=" + name +
 				"&pwd=" + passwd +
 				"&msg=" + msg +
 				"&authcode=" + code +
-				"&time=" + comment_time +
-				"&token=" + token;
+				"&token=" + token +
+				"&view=submit";
 
 			let xhr = new XMLHttpRequest();
 			xhr.open("POST", "#");
@@ -73,7 +71,7 @@ window.addEventListener("load", function () {
 							form.querySelector("#password").value = "";
 							form.querySelector("#userid").value = jsonComment.id;
 							form.querySelector("#token").value = jsonComment.token;
-							document.getElementById('captcha_img').src = art_id + '/r/' + Math.floor((Math.random() * 10000) + 1);
+							document.getElementById('captcha_img').src = 'r/' + Math.floor((Math.random() * 10000) + 1);
 						}
 					}
 				}
