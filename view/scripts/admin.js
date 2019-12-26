@@ -113,8 +113,6 @@ function callbackShowUsers(jsonUsers) {
             cellfunc.innerHTML = "<a href='#' onclick=\"deleteRecord('user#" + index + "&id=" + jsonUsers[index].id + "');\">删除</a>";
         }
         showUsers();
-    } else {
-        window.location.href = "";
     }
 }
 function callbackShowArticles(jsonArticle) {
@@ -225,7 +223,7 @@ function recordFunc(url, method, func, callback) {
             callback(xhr.response);
     };
 
-    var data = "src=" + func;
+    var data = "view=" + func;
     xhr.send(data);
 }
 
@@ -234,7 +232,7 @@ function onLoginOut() {
     xhr.open("POST", "");
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xhr.responseType = "json";
-    var data = "LoginOut=true";
+    var data = "view=logout&Logout=true";
 
     xhr.onload = function () {
         if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 304)) {

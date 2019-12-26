@@ -35,14 +35,18 @@ switch ($view) {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = $admin->checkAdmin($_POST);
             if ($error === "") {
-                exit();
+                if ($admin->isLogin() === true) {
+                    header('location:admin');
+                    exit();
+                }
             }
         }
 
         $username = $_POST["username"];
         $password = $_POST["password"];
         break;
-    case "login";
+    case "login":
+    case "":
         if (isset($_GET["r"])) {
             $admin->getAuthCode("");
             exit();

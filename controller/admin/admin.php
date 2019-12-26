@@ -183,41 +183,6 @@ namespace controller\admin {
             return $t->api_token("login", date("Y-m-d H:i:s", time()));
         }
 
-        public function ww()
-        {
-            //  判断是否登陆
-            if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
-                $json = "";
-                if (isset($_POST["LoginOut"])) {
-                    // 更新用户的token
-                    $_SESSION["admin"] = false;
-                    header('Content-Type:application/json; charset=utf-8');
-                    $json = json_encode(array('location' => '/login/'));
-                    exit($json);
-                }
-                if (isset($_POST["src"]) && isset($_POST["func"])) {
-                    $admin = new Admin($_POST["src"]);
-                    if ($_POST["func"] === "select_all") {
-                        $admin->getTable();
-                    } elseif ($_POST["func"] === "delete") {
-                        if (isset($_POST["index"])) {
-                            $admin->deleteRecord($_POST["index"], $_POST["id"]);
-                        }
-                    } elseif ($_POST["func"] === "approval") {
-                        if (isset($_POST["index"])) {
-                            $admin->updateCommentApproval($_POST["index"], $_POST["id"]);
-                        }
-                    }
-
-                    $json = json_encode($admin->serialize());
-                    header('Content-Type:application/json; charset=utf-8');
-                    exit($json);
-                }
-            } else {
-                header('location:/login/');
-                exit();
-            }
-        }
         public function getAuthCode($rand)
         {
             // 生成验证码图片
@@ -247,7 +212,6 @@ namespace controller\admin {
 
                         if ($isLogin) {
                             $_SESSION["admin"] = true;
-                            $this->isLogin();
                             return "";
                         }
                     }
@@ -260,14 +224,19 @@ namespace controller\admin {
         {
             if (isset($_SESSION["admin"]) && $_SESSION["admin"] === true) {
                 //  判断是否登陆
-                header('location:admin');
+                return true;
                 // header('Content-Type:application/json; charset=utf-8');
                 // $loc['location'] = '/view/admin/admin.html';
                 // $json = json_encode($loc);
                 // exit($json);
             } else {
-                header('location:login');
+                return false;
             }
+        }
+
+        public function logoutAdmin()
+        {
+            $_SESSION["admin"] = false;
         }
     }
 }

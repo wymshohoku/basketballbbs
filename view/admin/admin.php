@@ -13,21 +13,39 @@ if (isset($_POST["view"]))
     $view = $_POST["view"];
 
 $admin = new Admin($view);
-
 switch ($view) {
-    case "login":
+    case "logout":
+        $admin->logoutAdmin();
+        header('Content-Type:application/json; charset=utf-8');
+        $json = json_encode(array('location' => 'login'));
+        exit($json);
         break;
-    case "admin":
+    case "article":
+    case "comment":
+    case "user":
+        if ($admin->isLogin() === false) {
+            header('location:login');
+            exit();
+        }
+        if ($_POST['func'] === "select_all") {
+            $admin->getTable();
+        } elseif ($_POST['func'] === "delete") {
+            $admin->deleteRecord($_POST['index'], $_POST['id']);
+        } elseif ($_POST['func'] === "approval") {
+            $admin->updateCommentApproval($_POST['index'], $_POST['id']);
+        } else {
+            exit();
+        }
+        header('Content-Type:application/json; charset=utf-8');
+        $json = json_encode($admin->serialize());
+        exit($json);
         break;
     case "";
-        $admin->isLogin();
-        exit();
-}
-
-//  判断是否登陆
-if (!isset($_SESSION["admin"]) || $_SESSION["admin"] !== true) {
-    header('location:/login');
-    exit();
+        if ($admin->isLogin() === false) {
+            header('location:login');
+            exit();
+        }
+        break;
 }
 
 ?>
