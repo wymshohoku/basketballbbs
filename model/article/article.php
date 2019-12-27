@@ -1,9 +1,9 @@
 <?php
 
 namespace model\article {
-    require_once '../../model/mysql/mysql.php';
-    require_once '../../model/comment/comment.php';
-    require_once '../../model/common/token.php';
+    require_once __DIR__ . '/../mysql/mysql.php';
+    require_once __DIR__ . '/../comment/comment.php';
+    require_once __DIR__ . '/../common/token.php';
 
     use model\comment\comment;
     use model\mysql\Pdo;
@@ -311,14 +311,20 @@ namespace model\article {
             $this->art_text = $row['text'];
         }
         
-        public function getArticleCommnets($artid, $comment_current_page_index)
+        public function getCommentsCount($artid)
+        {
+            $_SESSION['comment_count'] = comment::getAllRecordsByArticleId($artid);
+            return $_SESSION['comment_count'];
+        }
+
+        public function getCurrentPageCommnets($artid, $comment_current_page_index)
         {
             $this->comment_pages = 0;
             $this->comment_count = 0;
             $this->comment_page_index = $comment_current_page_index;
 
             // 获取评论的总数
-            $this->comment_count = comment::getAllRecordsByArticleId($artid);
+            $this->comment_count = $this->getCommentsCount($artid);
 
             // 判断分页是否超出范围
             $this->comment_pages = (int) ($this->comment_count / COMMENT_PAGE_COUNT + (($this->comment_count % COMMENT_PAGE_COUNT) > 0 ? 1 : 0));
@@ -329,7 +335,6 @@ namespace model\article {
             $offset = ($this->comment_page_index - 1) * COMMENT_PAGE_COUNT;
             // 获取当前页评论的数量
             $this->comment_current_page_count = comment::getRecordForCurrentPageByArticleId($artid, COMMENT_PAGE_COUNT, $offset);
-            $_SESSION['comment_count'] = $this->comment_count;
             $this->comment_array = comment::getComments();
 
             return $this->comment_page_index;

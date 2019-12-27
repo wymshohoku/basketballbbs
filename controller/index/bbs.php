@@ -118,7 +118,7 @@ namespace controller\index {
             } else {
                 $curr_index = (int) $index;
             }
-            $_SESSION['comment_current_page_index'] = $this->art->getArticleCommnets($this->test_input($artid), $curr_index);
+            $_SESSION['comment_current_page_index'] = $this->art->getCurrentPageCommnets($this->test_input($artid), $curr_index);
         }
 
         /**

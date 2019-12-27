@@ -1,9 +1,9 @@
 <?php
 
 namespace model\user {
-    require_once '../../model/common/util.php';
-    require_once '../../model/mysql/mysql.php';
-    require_once '../../model/common/token.php';
+    require_once __DIR__ . '/../common/util.php';
+    require_once __DIR__ . '/../mysql/mysql.php';
+    require_once __DIR__ . '/../common/token.php';
 
     use model\mysql\Pdo;
     use model\util as Util;

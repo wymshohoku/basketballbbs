@@ -1,12 +1,12 @@
 <?php
 
 namespace controller\admin {
-    require_once '../../model/common/util.php';
-    require_once '../../model/common/captcha.php';
-    require_once '../../model/article/article.php';
-    require_once '../../model/comment/comment.php';
-    require_once '../../model/user/user.php';
-    require_once '../../model/mysql/mysql.php';
+    require_once __DIR__ . '/../../model/common/util.php';
+    require_once __DIR__ . '/../../model/common/captcha.php';
+    require_once __DIR__ . '/../../model/article/article.php';
+    require_once __DIR__ . '/../../model/comment/comment.php';
+    require_once __DIR__ . '/../../model/user/user.php';
+    require_once __DIR__ . '/../../model/mysql/mysql.php';
 
     use model\mysql\Pdo;
     use model\article\article;

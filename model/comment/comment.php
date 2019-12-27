@@ -1,8 +1,8 @@
 <?php
 
 namespace model\comment {
-    require_once '../../model/mysql/mysql.php';
-    require_once '../../model/user/user.php';
+    require_once __DIR__ . '/../mysql/mysql.php';
+    require_once __DIR__ . '/../user/user.php';
 
     use model\mysql\Pdo;
     use model\user\user;
