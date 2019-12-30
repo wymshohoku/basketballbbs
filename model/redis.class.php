@@ -1,6 +1,6 @@
 <?php
 
-namespace model\redis {
+namespace model {
 
     require "./lib/predis-1.1/autoload.php";
 

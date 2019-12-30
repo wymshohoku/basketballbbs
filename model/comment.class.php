@@ -1,13 +1,13 @@
 <?php
 
-namespace model\comment {
-    require_once __DIR__ . '/../mysql/mysql.php';
-    require_once __DIR__ . '/../user/user.php';
+namespace model {
 
-    use model\mysql\Pdo;
-    use model\user\user;
+    use model\Pdo;
+    use model\User;
 
-    class comment
+    require_once 'autoload.php';
+
+    class Comment
     {
         /**
          * 评论ID

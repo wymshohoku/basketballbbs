@@ -1,18 +1,16 @@
 <?php
 
 namespace controller\admin {
-    require_once __DIR__ . '/../../model/common/util.php';
-    require_once __DIR__ . '/../../model/common/captcha.php';
-    require_once __DIR__ . '/../../model/article/article.php';
-    require_once __DIR__ . '/../../model/comment/comment.php';
-    require_once __DIR__ . '/../../model/user/user.php';
-    require_once __DIR__ . '/../../model/mysql/mysql.php';
 
-    use model\mysql\Pdo;
-    use model\article\article;
-    use model\comment\comment;
-    use model\user\user;
-    use model\util as Util;
+    use model\Article;
+    use model\Comment;
+    use model\User;
+    use model\Pdo;
+    use model\util\Captcha;
+    use model\util\DataVerify;
+    use model\util\Token;
+
+    require_once __DIR__ . '/../../model/autoload.php';
 
     class Admin
     {
@@ -56,11 +54,11 @@ namespace controller\admin {
             $this->bAllRecord = false;
             $this->func_name = $func;
             if ($this->func_name == 'user') {
-                $this->func = new user();
+                $this->func = new User();
             } else if ($this->func_name == 'article') {
-                $this->func = new article();
+                $this->func = new Article();
             } else if ($this->func_name == 'comment') {
-                $this->func = new comment();
+                $this->func = new Comment();
             } else if ($this->func_name == 'login') {
                 $this->func = $this;
             }
@@ -89,8 +87,8 @@ namespace controller\admin {
          */
         public function updateCommentApproval($index, $id)
         {
-            $index = Util\DataVerify::test_input($index);
-            $id = Util\DataVerify::test_input($id);
+            $index = DataVerify::test_input($index);
+            $id = DataVerify::test_input($id);
 
             $this->func->updateCommentApproval($index, $id);
         }
@@ -105,8 +103,8 @@ namespace controller\admin {
          */
         public function deleteRecord($index, $id)
         {
-            $index = Util\DataVerify::test_input($index);
-            $id = Util\DataVerify::test_input($id);
+            $index = DataVerify::test_input($index);
+            $id = DataVerify::test_input($id);
 
             if ($this->func_name == "user") {
                 // 删除用户时，需要删除该用户的评论
@@ -169,7 +167,7 @@ namespace controller\admin {
          */
         public function test_input($data)
         {
-            return Util\DataVerify::test_input($data);
+            return DataVerify::test_input($data);
         }
 
         /**
@@ -179,14 +177,14 @@ namespace controller\admin {
          */
         public function getToken()
         {
-            $t = new Util\Token();
+            $t = new Token();
             return $t->api_token("login", date("Y-m-d H:i:s", time()));
         }
 
         public function getAuthCode($rand)
         {
             // 生成验证码图片
-            return Util\getAuthCodeImg();
+            return Captcha::getAuthCodeImg();
         }
 
         public function checkAdmin($post)
@@ -196,7 +194,7 @@ namespace controller\admin {
             $_SESSION["admin"] = false;
 
             // 验证用户
-            if ($post['authcode'] !== Util\getAuthCode()) {
+            if ($post['authcode'] !== Captcha::getAuthCode()) {
                 $error = "验证码错误！";
             } else if ($post['token'] === $_SESSION["token"]) {
                 $isLogin = false;

@@ -1,5 +1,4 @@
 <?php
-
 namespace controller\index {
 
     use model\article;

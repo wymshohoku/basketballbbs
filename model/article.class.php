@@ -1,13 +1,12 @@
 <?php
 
-namespace model\article {
-    require_once __DIR__ . '/../mysql/mysql.php';
-    require_once __DIR__ . '/../comment/comment.php';
-    require_once __DIR__ . '/../common/token.php';
+namespace model {
 
-    use model\comment\comment;
-    use model\mysql\Pdo;
+    use model\Comment;
+    use model\Pdo;
     use model\util\Token;
+    
+    require_once 'autoload.php';
 
     /**
      * 没有最多显示的评论数
@@ -19,7 +18,7 @@ namespace model\article {
      */
     \define('ARTICLE_TABLE_NAME', 'article');
 
-    class article
+    class Article
     {
         /**
          * 文章ID
@@ -334,8 +333,8 @@ namespace model\article {
             // 获取当前分页的评论
             $offset = ($this->comment_page_index - 1) * COMMENT_PAGE_COUNT;
             // 获取当前页评论的数量
-            $this->comment_current_page_count = comment::getRecordForCurrentPageByArticleId($artid, COMMENT_PAGE_COUNT, $offset);
-            $this->comment_array = comment::getComments();
+            $this->comment_current_page_count = Comment::getRecordForCurrentPageByArticleId($artid, COMMENT_PAGE_COUNT, $offset);
+            $this->comment_array = Comment::getComments();
 
             return $this->comment_page_index;
         }
@@ -354,7 +353,7 @@ namespace model\article {
          */
         public function insertComment($artid, $name, $msg, $datetime, $userid, $pwd, $token)
         {
-            $comment = new comment($artid, $name, $msg, $datetime, $userid, '2');
+            $comment = new Comment($artid, $name, $msg, $datetime, $userid, '2');
             $this->records = $comment->isLogin($pwd, $token);
             if ($this->records["haserror"] === false) {
                 $result = $comment->insertRecord();

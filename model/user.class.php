@@ -1,14 +1,13 @@
 <?php
 
-namespace model\user {
-    require_once __DIR__ . '/../common/util.php';
-    require_once __DIR__ . '/../mysql/mysql.php';
-    require_once __DIR__ . '/../common/token.php';
+namespace model {
 
-    use model\mysql\Pdo;
-    use model\util as Util;
+    use model\Pdo;
+    use model\util\Token;
+    
+    require_once 'autoload.php';
 
-    class user
+    class User
     {
         /**
          * 用户ID
@@ -233,7 +232,7 @@ namespace model\user {
          */
         public function createToken($id, $name, $passwd)
         {
-            $token = new Util\Token();
+            $token = new Token();
             $expireTime = new \DateTime(date('Y-m-d H:i:s', time()));
             date_add($expireTime, date_interval_create_from_date_string("10 minutes"));
             $expireTime = $expireTime->format('Y-m-d H:i:s');
