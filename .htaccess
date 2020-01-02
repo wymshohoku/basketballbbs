@@ -1,3 +1,7 @@
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+
 RewriteRule ^(/)?$ view/index/index.php?view=all
 
 RewriteRule ^scripts/(.*)\.js$ view/scripts/$1.js [L]

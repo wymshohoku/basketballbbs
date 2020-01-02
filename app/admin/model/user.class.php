@@ -2,12 +2,11 @@
 
 namespace model {
 
-    use model\Pdo;
-    use model\util\Token;
+    use model\Model;
     
     require_once 'autoload.php';
 
-    class User
+    class User extends Model
     {
         /**
          * 用户ID

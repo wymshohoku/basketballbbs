@@ -396,6 +396,9 @@ namespace model {
         {
             $this->bAllRecord = true;
 
+            if ($id == '')
+                return false;
+                
             $pdo = new Pdo();
             // 查询用户
             $sql = "UPDATE comments SET approval=2 WHERE id = '" . $id . "'";

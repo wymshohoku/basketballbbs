@@ -4,7 +4,7 @@ session_start();
 
 require_once '../../controller/index/bbs.php';
 
-use controller\index\Bbs as CBbs;
+use controller\Bbs;
 
 $json = "";
 $view = "";
@@ -12,7 +12,7 @@ if (isset($_GET["view"]))
     $view = $_GET["view"];
 if (isset($_POST["view"]))
     $view = $_POST["view"];
-$bbs = new CBbs();
+$bbs = new Bbs();
 
 switch ($view) {
     case "single":// 对单个文章的请求进行处理

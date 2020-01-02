@@ -1,5 +1,6 @@
 <?php
-namespace controller\index {
+
+namespace controller {
 
     use model\article;
     use model\util;

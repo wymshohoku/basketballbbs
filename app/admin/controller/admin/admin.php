@@ -1,6 +1,6 @@
 <?php
 
-namespace controller\admin {
+namespace controller {
 
     use model\Article;
     use model\Comment;
@@ -90,7 +90,7 @@ namespace controller\admin {
             $index = DataVerify::test_input($index);
             $id = DataVerify::test_input($id);
 
-            $this->func->updateCommentApproval($index, $id);
+            return $this->func->updateCommentApproval($index, $id);
         }
 
         /**

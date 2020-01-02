@@ -1,8 +1,9 @@
 <?php
-require __DIR__ . "/../model/user/user.php";
 
 use PHPUnit\Framework\TestCase;
-use model\user\user;
+use model\User;
+
+require_once __DIR__ . '/../model/autoload.php';
 
 class UserTest extends TestCase
 {
@@ -10,7 +11,7 @@ class UserTest extends TestCase
 
     protected function setUp()
     {
-      $this->object = new user(1);
+      $this->object = new User(1);
     }
     /**
      * @depends setUp

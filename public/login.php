@@ -2,7 +2,7 @@
 
 require_once '../../controller/admin/admin.php';
 
-use controller\admin\Admin;
+use controller\Admin;
 
 //  启动会话，这步必不可少
 session_start();

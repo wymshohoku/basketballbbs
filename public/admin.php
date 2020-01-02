@@ -1,10 +1,9 @@
 <?php
 require_once '../../controller/admin/admin.php';
 
-use controller\admin\Admin;
+use controller\Admin;
 
 session_start();
-
 
 $view = "";
 if (isset($_GET["view"]))

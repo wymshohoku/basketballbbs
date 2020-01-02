@@ -1,8 +1,8 @@
 <?php
 
-require_once '../../model/article/article.php';
+require_once '../../controller/index/home.php';
 
-use model\article\article;
+use controller\Home;
 
 $articles_json = "";
 $view = "";
@@ -14,9 +14,9 @@ switch ($view) {
         /**
          * 返回文章列表
          */
-        $art = new article();
-        $art->getTable();
-        $articles_json = $art->serialize();
+        $home = new Home();
+        $home->getArticles();
+        $articles_json = $home->serialize();
         break;
     case "":
         break;
