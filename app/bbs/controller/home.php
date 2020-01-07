@@ -1,9 +1,7 @@
 <?php
-namespace controller {
+namespace app\bbs\controller {
 
-    use model\Article;
-
-    require_once __DIR__ . '/../../model/autoload.php';
+    use app\common\model\ArticleModel;
 
     class Home
     {
@@ -21,7 +19,7 @@ namespace controller {
          */
         public function __construct()
         {
-            $this->art = new Article();
+            $this->art = new ArticleModel();
         }
         
         /**

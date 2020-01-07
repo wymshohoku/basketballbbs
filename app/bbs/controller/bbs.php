@@ -1,11 +1,9 @@
 <?php
 
-namespace controller {
+namespace app\bbs\controller {
 
-    use model\article;
-    use model\util;
-
-    require_once __DIR__ . '/../../model/autoload.php';
+    use app\common\model\ArticleModel;
+    use app\common\util as Util;
 
     class Bbs
     {
@@ -64,7 +62,7 @@ namespace controller {
         public function __construct()
         {
             $this->berror = false;
-            $this->art = new article($this->getArticleId());
+            $this->art = new ArticleModel($this->getArticleId());
         }
 
         /**
@@ -141,7 +139,7 @@ namespace controller {
          */
         private function isAuthCode()
         {
-            return Util\isAuthCode();
+            return Util\Captcha::isAuthCode();
         }
 
         /**
@@ -151,7 +149,7 @@ namespace controller {
          */
         private function getAuthCodeImg()
         {
-            return Util\getAuthCodeImg();
+            return Util\Captcha::getAuthCodeImg();
         }
 
         /**
@@ -163,7 +161,7 @@ namespace controller {
          */
         private function checkAuthCode($code)
         {
-            if (Util\getAuthCode() === $code) {
+            if (Util\Captcha::getAuthCode() === $code) {
                 return true;
             }
             $this->berror = true;
